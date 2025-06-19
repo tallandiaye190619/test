@@ -102,6 +102,20 @@ export const eleves = [
     parentId: 6,
     statut: 'actif',
     photo: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
+  },
+  {
+    id: 4,
+    nom: 'Ndiaye',
+    prenom: 'Talla',
+    sexe: 'M',
+    dateNaissance: '2001-08-10',
+    classe: 'Tle S2-A',
+    numeroMatricule: 'EL004',
+    telephoneParent: '77 567 89 01',
+    emailParent: 'ndiaye.parent@email.sn',
+    parentId: 6,
+    statut: 'actif',
+    photo: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
   }
 ];
 
@@ -151,11 +165,19 @@ export const classes = [
   },
   {
     id: 3,
-    nom: 'CM2',
+    nom: 'CM2 A',
     niveau: 'Primaire',
     effectif: 28,
     enseignantPrincipal: 'Khadija Ba',
     salle: 'Salle 201'
+  },
+  {
+    id: 4,
+    nom: 'Tle S2-A',
+    niveau: 'Primaire',
+    effectif: 28,
+    enseignantPrincipal: 'Khadija Ba',
+    salle: 'Salle 301'
   }
 ];
 
