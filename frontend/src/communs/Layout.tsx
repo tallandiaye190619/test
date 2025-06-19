@@ -87,7 +87,6 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-800">
-      {/* Sidebar */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-md transform transition-transform duration-300
         ${sidebarOuverte ? 'translate-x-0' : '-translate-x-full'}
@@ -105,25 +104,23 @@ const Layout = ({ children }) => {
 
         <nav className="px-3 py-4 overflow-y-auto">
           <ul className="space-y-2">
-            {menus.map((menu) => {
-              const Icon = menu.icone;
-              const actif = location.pathname === menu.chemin;
-
+            {menus.map(({ nom, chemin, icone: Icon }) => {
+              const actif = location.pathname === chemin;
               return (
-                <li key={menu.chemin}>
+                <li key={chemin}>
                   <Link
-                    to={menu.chemin}
+                    to={chemin}
                     onClick={() => setSidebarOuverte(false)}
                     className={`
                       flex items-center px-4 py-3 rounded-lg text-sm font-medium
                       transition duration-200
                       ${actif
-                        ? 'bg-blue-100 text-blue-700 shadow-sm'
+                        ? 'bg-blue-100 text-blue-700 font-semibold border-l-4 border-blue-500'
                         : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600'}
                     `}
                   >
                     <Icon className="w-5 h-5 mr-3" />
-                    {menu.nom}
+                    {nom}
                   </Link>
                 </li>
               );
@@ -142,21 +139,17 @@ const Layout = ({ children }) => {
         </div>
       </aside>
 
-      {/* Contenu principal */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
+      <div className="flex flex-col flex-1 overflow-hidden">
         <header className="bg-white shadow-sm border-b px-4 sm:px-6 py-4 flex justify-between items-center">
-          <div>
-            <button onClick={() => setSidebarOuverte(true)} className="lg:hidden text-gray-700">
-              <Menu className="h-6 w-6" />
-            </button>
-          </div>
+          <button onClick={() => setSidebarOuverte(true)} className="lg:hidden text-gray-700" aria-label="Ouvrir le menu">
+            <Menu className="h-6 w-6" />
+          </button>
 
           <div className="relative">
             <button onClick={basculeMenu} className="flex items-center space-x-3 hover:bg-gray-100 px-2 py-1 rounded-lg transition">
               <div className="text-right">
-                <p className="text-sm font-semibold">{utilisateur?.prenom} {utilisateur?.nom}</p>
-                <p className="text-xs text-gray-500 capitalize">{utilisateur?.role}</p>
+                <p className="text-sm font-semibold">{utilisateur?.prenom || 'Utilisateur'} {utilisateur?.nom || ''}</p>
+                <p className="text-xs text-gray-500 capitalize">{utilisateur?.role || 'role inconnu'}</p>
               </div>
               <img
                 src={utilisateur?.photo || 'https://i.pravatar.cc/40?img=3'}
@@ -195,16 +188,14 @@ const Layout = ({ children }) => {
           </div>
         </header>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+        <main className="flex-1 overflow-y-auto min-h-[calc(100vh-64px)] p-4 md:p-6 bg-gray-50">
           {children}
         </main>
       </div>
 
-      {/* Overlay mobile */}
       {sidebarOuverte && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOuverte(false)}
         />
       )}

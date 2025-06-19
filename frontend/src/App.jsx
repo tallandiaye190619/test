@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Connexion from './communs/connexion';
 import Layout from './communs/Layout';
 import { AuthProvider, useAuth } from './context/MonContext';
+import ElevesPage from './Pages/administrateur/ElevesPage';
 import TableauDeBordAdministrateur from './Pages/administrateur/TableuDeBord';
 
 const RouteProtegee = ({ children }) => {
@@ -49,6 +50,7 @@ const AppRoutes = () => {
         
         {/* Routes Administrateur */}
         <Route path="/admin/tableau-de-bord" element={<TableauDeBordAdministrateur />} />
+        <Route path="/admin/eleves" element={<ElevesPage />} />
         
         {/* Redirection pour routes inconnues */}
         <Route path="*" element={<Navigate to="/" replace />} />

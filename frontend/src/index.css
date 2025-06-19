@@ -42,7 +42,7 @@
   }
 
   .table {
-    @apply min-w-full divide-y divide-gray-200;
+    @apply w-full min-w-[900px] divide-y divide-gray-200;
   }
 
   .table-header {

@@ -81,7 +81,7 @@ export const eleves = [
     prenom: 'Aissatou',
     sexe: 'F',
     dateNaissance: '2012-03-22',
-    classe: 'CM2',
+    classe: 'CM2 A',
     numeroMatricule: 'EL002',
     telephoneParent: '77 345 67 89',
     emailParent: 'fatou.sow@parent.sn',
