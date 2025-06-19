@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Connexion from './communs/connexion';
+import Layout from './communs/Layout';
 import { AuthProvider, useAuth } from './context/MonContext';
 import TableauDeBordAdministrateur from './Pages/administrateur/TableuDeBord';
 
@@ -41,15 +42,18 @@ function RootRedirect() {
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      <Route path="/" element={<RootRedirect />} />
-      
-      {/* Routes Administrateur */}
-      <Route path="/admin/tableau-de-bord" element={<TableauDeBordAdministrateur />} />
-      
-      {/* Redirection pour routes inconnues */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+
+    <Layout>
+      <Routes>
+        <Route path="/" element={<RootRedirect />} />
+        
+        {/* Routes Administrateur */}
+        <Route path="/admin/tableau-de-bord" element={<TableauDeBordAdministrateur />} />
+        
+        {/* Redirection pour routes inconnues */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Layout>
   );
 };
 
