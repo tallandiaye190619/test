@@ -3,6 +3,7 @@ import Connexion from './communs/connexion';
 import Layout from './communs/Layout';
 import { AuthProvider, useAuth } from './context/MonContext';
 import ElevesPage from './Pages/administrateur/ElevesPage';
+import EnseignantPage from './Pages/administrateur/EnseignatPAge';
 import TableauDeBordAdministrateur from './Pages/administrateur/TableuDeBord';
 
 const RouteProtegee = ({ children }) => {
@@ -51,6 +52,7 @@ const AppRoutes = () => {
         {/* Routes Administrateur */}
         <Route path="/admin/tableau-de-bord" element={<TableauDeBordAdministrateur />} />
         <Route path="/admin/eleves" element={<ElevesPage />} />
+        <Route path="/admin/enseignants" element={<EnseignantPage />} />
         
         {/* Redirection pour routes inconnues */}
         <Route path="*" element={<Navigate to="/" replace />} />

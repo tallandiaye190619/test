@@ -253,14 +253,20 @@ export default function ElevesPage() {
                   </td>
                   <td className="table-cell">
                     <div className="flex space-x-2">
-                      <button className="btn btn-outline p-2" onClick={()=>ouvrirModal('voir', eleve)}>
-                        <Eye className="h-4 w-4" />
+                      <button 
+                        className="p-2 text-gray-500 hover:text-blue-600 border border-gray-300 rounded hover:bg-blue-50"
+                        onClick={() => ouvrirModal('voir', eleve)}
+                      >
+                        <Eye className="h-4 w-4 text-blue-400" />
                       </button>
-                      <button className="btn btn-outline p-2" onClick={() => ouvrirModal('modifier', eleve)}>
-                        <Edit className="h-4 w-4" />
+                      <button 
+                        className="p-2 text-gray-500 hover:text-green-600 border border-gray-300 rounded hover:bg-green-50"
+                        onClick={() => ouvrirModal('modifier', eleve)}
+                      >
+                        <Edit className="h-4 w-4 text-yellow-600" />
                       </button>
-                      <button className="btn btn-outline p-2 text-terre-600 hover:text-terre-700">
-                        <Trash2 className="h-4 w-4" />
+                      <button className="p-2 text-gray-500 hover:text-red-600 border border-gray-300 rounded hover:bg-red-50">
+                        <Trash2 className="h-4 w-4 text-red-500" />
                       </button>
                     </div>
                   </td>
@@ -272,61 +278,61 @@ export default function ElevesPage() {
       </div>
       {/*Modal pour visualiser les details */}
       {modalOuverte && (
-  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
-    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale-in border border-fleuve-100">
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6 border-b pb-4">
-          <h3 className="text-xl font-semibold text-fleuve-700">
-            {typeModal === 'ajouter' && 'Ajouter un élève'}
-            {typeModal === 'modifier' && "Modifier l'élève"}
-            {typeModal === 'voir' && "Détails de l'élève"}
-          </h3>
-          <button onClick={fermerModal} className="text-gray-400 hover:text-gray-600 transition">
-            <X className="h-6 w-6" />
-          </button>
-        </div>
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale-in border border-fleuve-100">
+              <div className="p-6">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-6 border-b pb-4">
+                  <h3 className="text-xl font-semibold text-fleuve-700">
+                    {typeModal === 'ajouter' && 'Ajouter un élève'}
+                    {typeModal === 'modifier' && "Modifier l'élève"}
+                    {typeModal === 'voir' && "Détails de l'élève"}
+                  </h3>
+                  <button onClick={fermerModal} className="text-gray-400 hover:text-gray-600 transition">
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
 
-        {/* Corps */}
-        {typeModal === 'voir' ? (
-          <div className="space-y-6">
-            {/* Avatar + Nom */}
-            <div className="flex flex-col items-center space-y-3">
-              <img
-                src={
-                  eleveSelectionne?.photo ||
-                  "https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=150"
-                }
-                alt={`${eleveSelectionne?.prenom} ${eleveSelectionne?.nom}`}
-                className="h-24 w-24 rounded-full object-cover border-4 border-fleuve-200"
-              />
-              <div className="text-center">
-                <h4 className="text-xl font-bold text-gray-800">
-                  {eleveSelectionne?.prenom} {eleveSelectionne?.nom}
-                </h4>
-                <p className="text-sm text-gray-500">
-                  Matricule : {eleveSelectionne?.numeroMatricule}
-                </p>
+                {/* Corps */}
+                {typeModal === 'voir' ? (
+                  <div className="space-y-6">
+                    {/* Avatar + Nom */}
+                    <div className="flex flex-col items-center space-y-3">
+                      <img
+                        src={
+                          eleveSelectionne?.photo ||
+                          "https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=150"
+                        }
+                        alt={`${eleveSelectionne?.prenom} ${eleveSelectionne?.nom}`}
+                        className="h-24 w-24 rounded-full object-cover border-4 border-fleuve-200"
+                      />
+                      <div className="text-center">
+                        <h4 className="text-xl font-bold text-gray-800">
+                          {eleveSelectionne?.prenom} {eleveSelectionne?.nom}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          Matricule : {eleveSelectionne?.numeroMatricule}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Infos */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <Info label="Classe" value={eleveSelectionne?.classe} />
+                      <Info
+                        label="Date de naissance"
+                        value={new Date(eleveSelectionne?.dateNaissance).toLocaleDateString("fr-FR")}
+                      />
+                      <Info label="Téléphone du parent" value={eleveSelectionne?.telephoneParent} />
+                      <Info label="Email du parent" value={eleveSelectionne?.emailParent} />
+                    </div>
+                  </div>
+                ) : (
+                  <FormulairEleve />
+                )}
               </div>
             </div>
-
-            {/* Infos */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <Info label="Classe" value={eleveSelectionne?.classe} />
-              <Info
-                label="Date de naissance"
-                value={new Date(eleveSelectionne?.dateNaissance).toLocaleDateString("fr-FR")}
-              />
-              <Info label="Téléphone du parent" value={eleveSelectionne?.telephoneParent} />
-              <Info label="Email du parent" value={eleveSelectionne?.emailParent} />
-            </div>
           </div>
-        ) : (
-          <FormulairEleve />
-        )}
-      </div>
-    </div>
-  </div>
 )}
 
       
