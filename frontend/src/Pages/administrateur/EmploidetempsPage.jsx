@@ -1,14 +1,13 @@
-
 import {
-    BookOpen,
-    Calendar,
-    Clock,
-    Edit,
-    GraduationCap,
-    MapPin,
-    Plus,
-    Trash2,
-    X
+  BookOpen,
+  Calendar,
+  Clock,
+  Edit,
+  GraduationCap,
+  MapPin,
+  Plus,
+  Trash2,
+  X
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../context/MonContext';
@@ -20,7 +19,6 @@ const EmploisDuTempsPage = () => {
   const [coursSelectionne, setCours] = useState(null);
   const [typeModal, setTypeModal] = useState('');
 
-  // J'assume que ces données sont bien structurées comme des tableaux d'objets
   const emploisDuTemps = donnees.emploisDuTemps || [];
   const classes = donnees.classes || [];
   const enseignants = donnees.enseignants || [];
@@ -169,10 +167,10 @@ const EmploisDuTempsPage = () => {
         </div>
         
         <div className="flex justify-end space-x-3 pt-4">
-          <button type="button" onClick={fermerModal} className="btn-secondary"> {/* Utilisation du composant btn-secondary */}
+          <button type="button" onClick={fermerModal} className="btn-secondary">
             Annuler
           </button>
-          <button type="submit" className="btn-primary"> {/* Utilisation du composant btn-primary */}
+          <button type="submit" className="btn-primary">
             {typeModal === 'ajouter' ? 'Ajouter' : 'Modifier'}
           </button>
         </div>
@@ -184,12 +182,12 @@ const EmploisDuTempsPage = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Emplois du Temps</h1> {/* Utilisation de la classe de base h1 */}
+          <h1 className="text-2xl font-bold text-gray-900">Emplois du Temps</h1>
           <p className="text-gray-600">Gérez les emplois du temps des classes</p>
         </div>
         <button
           onClick={() => ouvrirModal('ajouter')}
-          className="btn-primary flex items-center"
+          className="btn-primary flex items-center shadow-md hover:shadow-lg"
         >
           <Plus className="h-4 w-4 mr-2" />
           Ajouter un cours
@@ -197,10 +195,9 @@ const EmploisDuTempsPage = () => {
       </div>
 
       {/* Sélection de classe */}
-      <div className="card"> {/* Utilisation du composant card */}
+      <div className="card p-6 shadow-sm">
         <div className="flex items-center space-x-4">
-          {/* Correction: la couleur primaire de votre config est 'soleil' ou 'fleuve' */}
-          <Calendar className="h-5 w-5 text-fleuve-600" /> 
+          <Calendar className="h-6 w-6 text-fleuve-600" /> {/* Couleur fleuve */}
           <select
             value={classeSelectionnee}
             onChange={(e) => setClasseSelectionnee(e.target.value)}
@@ -215,11 +212,11 @@ const EmploisDuTempsPage = () => {
       </div>
 
       {/* Grille de l'emploi du temps */}
-      <div className="card table-container"> {/* Utilisation des composants card et table-container */}
-        <table className="table"> {/* Utilisation du composant table */}
-          <thead className="table-header"> {/* Utilisation du composant table-header */}
+      <div className="card table-container p-0">
+        <table className="table">
+          <thead className="table-header">
             <tr>
-              <th className="table-header-cell"> {/* Utilisation du composant table-header-cell */}
+              <th className="table-header-cell">
                 Heures
               </th>
               {jours.map(jour => (
@@ -229,10 +226,10 @@ const EmploisDuTempsPage = () => {
               ))}
             </tr>
           </thead>
-          <tbody className="table-body"> {/* Utilisation du composant table-body */}
+          <tbody className="table-body">
             {heures.map(heure => (
-              <tr key={heure} className="table-row"> {/* Utilisation du composant table-row */}
-                <td className="table-cell font-medium text-gray-900 bg-gray-50"> {/* Base table-cell + ajustement */}
+              <tr key={heure} className="table-row">
+                <td className="table-cell font-medium text-gray-900 bg-gray-50 border-r border-gray-200"> {/* Ajout de bordure */}
                   {heure}
                 </td>
                 {jours.map(jour => {
@@ -241,8 +238,7 @@ const EmploisDuTempsPage = () => {
                     <td key={`${jour}-${heure}`} className="px-2 py-3 text-center">
                       {cours ? (
                         <div 
-                          // Adapter les couleurs aux couleurs 'fleuve' et 'soleil'
-                          className="bg-fleuve-100 border border-fleuve-200 rounded-lg p-2 cursor-pointer hover:bg-fleuve-200 transition-colors"
+                          className="bg-fleuve-100 border border-fleuve-200 rounded-lg p-2 cursor-pointer hover:bg-fleuve-200 transition-colors duration-200 shadow-sm hover:shadow-md"
                           onClick={() => ouvrirModal('voir', cours)}
                         >
                           <div className="text-xs font-medium text-fleuve-900">
@@ -258,7 +254,7 @@ const EmploisDuTempsPage = () => {
                       ) : (
                         <button
                           onClick={() => ouvrirModal('ajouter', { jour, heure, classe: classeSelectionnee })}
-                          className="w-full h-16 border-2 border-dashed border-gray-300 rounded-lg hover:border-fleuve-400 hover:bg-fleuve-50 transition-colors flex items-center justify-center"
+                          className="w-full h-16 border-2 border-dashed border-gray-300 rounded-lg hover:border-fleuve-400 hover:bg-fleuve-50 transition-colors duration-200 flex items-center justify-center"
                         >
                           <Plus className="h-4 w-4 text-gray-400" />
                         </button>
@@ -274,8 +270,8 @@ const EmploisDuTempsPage = () => {
 
       {/* Modal */}
       {modalOuverte && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in"> {/* Utilisation de l'animation fade-in */}
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-scale-in"> {/* Utilisation de l'animation scale-in */}
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl animate-scale-in">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-medium text-gray-900">
@@ -285,58 +281,53 @@ const EmploisDuTempsPage = () => {
                 </h3>
                 <button
                   onClick={fermerModal}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                  title="Fermer"
                 >
                   <X className="h-6 w-6" />
                 </button>
               </div>
               
               {typeModal === 'voir' ? (
-                <div className="space-y-4 fade-in"> {/* Utilisation de l'animation fade-in */}
-                  <div className="text-center">
-                    {/* Adapter les couleurs aux couleurs 'fleuve' et 'soleil' */}
-                    <div className="bg-fleuve-100 p-4 rounded-full w-16 h-16 mx-auto mb-4">
-                      <BookOpen className="h-8 w-8 text-fleuve-600 mx-auto" />
-                    </div>
+                <div className="space-y-4 fade-in">
+                  <div className="text-center bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-inner">
+                    <BookOpen className="h-12 w-12 text-fleuve-600 mx-auto mb-4" /> {/* Icône plus grande et colorée */}
                     <h4 className="text-2xl font-bold text-gray-900">{coursSelectionne?.matiere}</h4>
                     <p className="text-gray-600">{coursSelectionne?.classe}</p>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-4 bg-gray-50 rounded-lg">
-                      {/* Adapter les couleurs aux couleurs définies ou à des couleurs génériques */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
                       <Calendar className="h-6 w-6 text-fleuve-600 mx-auto mb-2" />
                       <p className="font-medium text-gray-900">{coursSelectionne?.jour}</p>
                       <p className="text-sm text-gray-600">Jour</p>
                     </div>
-                    <div className="text-center p-4 bg-gray-50 rounded-lg">
-                      <Clock className="h-6 w-6 text-acacia-600 mx-auto mb-2" /> {/* Utilisation de la couleur acacia */}
+                    <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <Clock className="h-6 w-6 text-acacia-600 mx-auto mb-2" />
                       <p className="font-medium text-gray-900">{coursSelectionne?.heure}</p>
                       <p className="text-sm text-gray-600">Heure</p>
                     </div>
-                    <div className="text-center p-4 bg-gray-50 rounded-lg">
-                      <GraduationCap className="h-6 w-6 text-soleil-600 mx-auto mb-2" /> {/* Utilisation de la couleur soleil */}
+                    <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <GraduationCap className="h-6 w-6 text-soleil-600 mx-auto mb-2" />
                       <p className="font-medium text-gray-900">{coursSelectionne?.enseignant}</p>
                       <p className="text-sm text-gray-600">Enseignant</p>
                     </div>
-                    <div className="text-center p-4 bg-gray-50 rounded-lg">
-                      <MapPin className="h-6 w-6 text-terre-600 mx-auto mb-2" /> {/* Utilisation de la couleur terre */}
+                    <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <MapPin className="h-6 w-6 text-terre-600 mx-auto mb-2" />
                       <p className="font-medium text-gray-900">{coursSelectionne?.salle}</p>
                       <p className="text-sm text-gray-600">Salle</p>
                     </div>
                   </div>
-                  <div className="flex justify-center space-x-3">
+                  <div className="flex justify-center space-x-3 mt-6">
                     <button
                       onClick={() => {
                         setTypeModal('modifier');
                       }}
-                      className="btn-secondary flex items-center"
+                      className="btn-primary flex items-center shadow-sm hover:shadow-md"
                     >
                       <Edit className="h-4 w-4 mr-2" />
                       Modifier
                     </button>
-                    {/* Pour le bouton de suppression, vous n'avez pas de `btn-danger` ou similaire.
-                        Je vais utiliser des classes directes pour le texte rouge et le hover. */}
-                    <button className="btn-secondary text-red-600 hover:bg-red-50 flex items-center">
+                    <button className="btn-secondary text-terre-600 hover:bg-terre-50 flex items-center shadow-sm hover:shadow-md">
                       <Trash2 className="h-4 w-4 mr-2" />
                       Supprimer
                     </button>

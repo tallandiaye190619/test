@@ -1,14 +1,14 @@
 import {
-    AlertCircle,
-    Bell,
-    CheckCircle,
-    Eye,
-    Info,
-    Plus,
-    Send,
-    Trash2,
-    Users,
-    X
+  AlertCircle,
+  Bell,
+  CheckCircle,
+  Eye,
+  Info,
+  Plus,
+  Send,
+  Trash2,
+  Users,
+  X
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../context/MonContext';
@@ -160,7 +160,7 @@ const Notifications = () => {
           <button type="button" onClick={fermerModal} className="btn-secondary">
             Annuler
           </button>
-          <button type="submit" className="btn-primary flex items-center">
+          <button type="submit" className="btn-primary flex items-center shadow-sm hover:shadow-md">
             <Send className="h-4 w-4 mr-2" />
             Envoyer
           </button>
@@ -209,7 +209,7 @@ const Notifications = () => {
 
       {/* Statistiques */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="card border border-gray-200 transition-all duration-200 hover:shadow-lg">
+        <div className="card border border-gray-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
           <div className="flex items-center">
             <Bell className="h-8 w-8 text-fleuve-600 mr-3" />
             <div>
@@ -218,7 +218,7 @@ const Notifications = () => {
             </div>
           </div>
         </div>
-        <div className="card border border-gray-200 transition-all duration-200 hover:shadow-lg">
+        <div className="card border border-gray-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
           <div className="flex items-center">
             <CheckCircle className="h-8 w-8 text-acacia-600 mr-3" />
             <div>
@@ -229,7 +229,7 @@ const Notifications = () => {
             </div>
           </div>
         </div>
-        <div className="card border border-gray-200 transition-all duration-200 hover:shadow-lg">
+        <div className="card border border-gray-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
           <div className="flex items-center">
             <AlertCircle className="h-8 w-8 text-soleil-600 mr-3" />
             <div>
@@ -240,7 +240,7 @@ const Notifications = () => {
             </div>
           </div>
         </div>
-        <div className="card border border-gray-200 transition-all duration-200 hover:shadow-lg">
+        <div className="card border border-gray-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
           <div className="flex items-center">
             <Users className="h-8 w-8 text-fleuve-600 mr-3" />
             <div>
@@ -309,7 +309,7 @@ const Notifications = () => {
 
       {notifications.length === 0 && (
         <div className="text-center py-12">
-          <Bell className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-bounce" /> {/* Ajout d'une petite animation */}
+          <Bell className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-bounce" />
           <p className="text-gray-500">Aucune notification envoyée</p>
           <p className="text-gray-400 text-sm">Commencez par envoyer votre première notification !</p>
         </div>

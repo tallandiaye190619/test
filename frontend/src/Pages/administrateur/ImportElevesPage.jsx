@@ -1,4 +1,3 @@
-
 import { AlertCircle, Check, Download, FileText, Info, Upload, X } from 'lucide-react';
 import { useState } from 'react';
 
@@ -60,10 +59,10 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
               erreursLigne.push(`${champ.label} manquant`);
             }
             if (champ.nom === 'sexe' && objet[champ.nom] && !['M', 'F'].includes(objet[champ.nom].toUpperCase())) {
-              erreursLigne.push('Sexe doit être M ou F');
+              erreursLignes.push('Sexe doit être M ou F');
             }
             if (champ.nom === 'emailParent' && objet[champ.nom] && !objet[champ.nom].includes('@')) {
-              erreursLigne.push('Email invalide');
+              erreursLignes.push('Email invalide');
             }
           });
           
@@ -129,7 +128,7 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
 
   if (etapeImport === 'selection') {
     return (
-      <div className="space-y-6 animate-fade-in"> {/* Ajout de l'animation fade-in */}
+      <div className="space-y-6 animate-fade-in">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Import d'Élèves</h1>
           <p className="text-gray-600">Importez plusieurs élèves à partir d'un fichier CSV ou Excel</p>
@@ -137,11 +136,11 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Zone d'upload */}
-          <div className="card p-6 shadow-lg border border-gray-100"> {/* Amélioration de la card */}
+          <div className="card p-6 shadow-lg border border-gray-100">
             <h3 className="text-xl font-semibold text-gray-900 mb-6">Sélectionner un fichier</h3>
             
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-colors duration-200 hover:border-fleuve-400 hover:bg-fleuve-50 cursor-pointer"> {/* Couleurs fleuve */}
-              <Upload className="mx-auto h-16 w-16 text-fleuve-400 mb-6 animate-bounce" /> {/* Icône plus grande et animée */}
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-colors duration-200 hover:border-fleuve-400 hover:bg-fleuve-50 cursor-pointer">
+              <Upload className="mx-auto h-16 w-16 text-fleuve-400 mb-6 animate-bounce" />
               <div className="space-y-3">
                 <p className="text-lg font-semibold text-gray-900">
                   Glissez votre fichier ici ou cliquez pour sélectionner
@@ -178,11 +177,11 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
           </div>
 
           {/* Instructions */}
-          <div className="card p-6 shadow-lg border border-gray-100"> {/* Amélioration de la card */}
+          <div className="card p-6 shadow-lg border border-gray-100">
             <h3 className="text-xl font-semibold text-gray-900 mb-6">Instructions d'import</h3>
             
             <div className="space-y-4">
-              <div className="bg-fleuve-50 p-4 rounded-lg border border-fleuve-200 shadow-sm"> {/* Couleurs fleuve */}
+              <div className="bg-fleuve-50 p-4 rounded-lg border border-fleuve-200 shadow-sm">
                 <h4 className="font-semibold text-fleuve-900 mb-2 flex items-center">
                     <Info className="h-5 w-5 mr-2" /> Format requis
                 </h4>
@@ -194,18 +193,18 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
               <div className="space-y-2">
                 {campsRequis.map((champ, index) => (
                   <div key={index} className="flex items-center space-x-3 p-2 rounded-md bg-gray-50 border border-gray-100">
-                    <div className="w-2 h-2 bg-fleuve-600 rounded-full"></div> {/* Couleur fleuve */}
+                    <div className="w-2 h-2 bg-fleuve-600 rounded-full"></div>
                     <span className="text-sm font-medium text-gray-900">{champ.nom}</span>
                     <span className="text-sm text-gray-500">- {champ.label}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="bg-soleil-50 p-4 rounded-lg border border-soleil-200 shadow-sm"> {/* Couleurs soleil */}
+              <div className="bg-soleil-50 p-4 rounded-lg border border-soleil-200 shadow-sm">
                 <h4 className="font-semibold text-soleil-900 mb-2 flex items-center">
                     <AlertCircle className="h-5 w-5 mr-2" /> Points importants
                 </h4>
-                <ul className="text-sm text-soleil-700 space-y-1 list-disc pl-5"> {/* Liste à puces */}
+                <ul className="text-sm text-soleil-700 space-y-1 list-disc pl-5">
                   <li>La première ligne doit contenir les noms des colonnes</li>
                   <li>Le sexe doit être 'M' pour masculin ou 'F' pour féminin</li>
                   <li>La date de naissance au format YYYY-MM-DD</li>
@@ -222,7 +221,7 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
 
   if (etapeImport === 'preview') {
     return (
-      <div className="space-y-6 animate-fade-in"> {/* Ajout de l'animation fade-in */}
+      <div className="space-y-6 animate-fade-in">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Aperçu des données</h1>
@@ -246,7 +245,7 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
 
         {/* Statistiques */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="card bg-acacia-50 border border-acacia-200 p-4 rounded-lg shadow-md"> {/* Couleurs acacia */}
+          <div className="card bg-acacia-50 border border-acacia-200 p-4 rounded-lg shadow-md">
             <div className="flex items-center">
               <Check className="h-8 w-8 text-acacia-600 mr-3" />
               <div>
@@ -257,7 +256,7 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
               </div>
             </div>
           </div>
-          <div className="card bg-terre-50 border border-terre-200 p-4 rounded-lg shadow-md"> {/* Couleurs terre */}
+          <div className="card bg-terre-50 border border-terre-200 p-4 rounded-lg shadow-md">
             <div className="flex items-center">
               <X className="h-8 w-8 text-terre-600 mr-3" />
               <div>
@@ -266,7 +265,7 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
               </div>
             </div>
           </div>
-          <div className="card bg-fleuve-50 border border-fleuve-200 p-4 rounded-lg shadow-md"> {/* Couleurs fleuve */}
+          <div className="card bg-fleuve-50 border border-fleuve-200 p-4 rounded-lg shadow-md">
             <div className="flex items-center">
               <FileText className="h-8 w-8 text-fleuve-600 mr-3" />
               <div>
@@ -279,7 +278,7 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
 
         {/* Erreurs */}
         {erreurs.length > 0 && (
-          <div className="card bg-terre-50 border border-terre-200 p-6 shadow-sm"> {/* Couleurs terre */}
+          <div className="card bg-terre-50 border border-terre-200 p-6 shadow-sm">
             <h3 className="text-xl font-semibold text-terre-900 mb-4 flex items-center">
               <AlertCircle className="h-6 w-6 mr-2" />
               Erreurs à corriger
@@ -309,12 +308,12 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
 
         {/* Aperçu des données valides */}
         {donneesPreview.filter(d => d.valide).length > 0 && (
-          <div className="card p-0 table-container shadow-sm"> {/* Utilisation du composant table-container */}
+          <div className="card p-0 table-container shadow-sm">
             <h3 className="text-lg font-medium text-gray-900 p-4 border-b border-gray-200">
               Aperçu des élèves à importer
             </h3>
-            <table className="table"> {/* Utilisation du composant table */}
-                <thead className="table-header"> {/* Utilisation du composant table-header */}
+            <table className="table">
+                <thead className="table-header">
                   <tr>
                     <th className="table-header-cell">
                       Prénom
@@ -333,9 +332,9 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
                     </th>
                   </tr>
                 </thead>
-                <tbody className="table-body"> {/* Utilisation du composant table-body */}
+                <tbody className="table-body">
                   {donneesPreview.filter(d => d.valide).slice(0, 10).map((eleve, index) => (
-                    <tr key={index} className="table-row"> {/* Utilisation du composant table-row */}
+                    <tr key={index} className="table-row">
                       <td className="table-cell">
                         {eleve.prenom}
                       </td>
@@ -370,10 +369,10 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
     return (
       <div className="flex items-center justify-center min-h-[400px] animate-fade-in">
         <div className="text-center bg-white p-8 rounded-lg shadow-xl border border-gray-100">
-          <div className="w-16 h-16 border-4 border-fleuve-200 border-t-fleuve-600 rounded-full animate-spin mx-auto mb-6"></div> {/* Couleur fleuve */}
+          <div className="w-16 h-16 border-4 border-fleuve-200 border-t-fleuve-600 rounded-full animate-spin mx-auto mb-6"></div>
           <h2 className="text-xl font-medium text-gray-900 mb-2">Import en cours...</h2>
           <p className="text-gray-600 mb-4">Veuillez patienter pendant l'import des élèves</p>
-          <div className="w-64 bg-gray-200 rounded-full h-3 mx-auto"> {/* Barre de progression plus épaisse */}
+          <div className="w-64 bg-gray-200 rounded-full h-3 mx-auto">
             <div
               className="bg-fleuve-600 h-3 rounded-full transition-all duration-300 ease-linear" 
               style={{ width: `${progression}%` }}
@@ -389,7 +388,7 @@ Mamadou,Ndiaye,M,2009-08-10,5ème B,77 567 89 01,ndiaye.parent@email.sn`;
     return (
       <div className="flex items-center justify-center min-h-[400px] animate-fade-in">
         <div className="text-center bg-white p-8 rounded-lg shadow-xl border border-gray-100">
-          <div className="w-16 h-16 bg-acacia-100 rounded-full flex items-center justify-center mx-auto mb-6"> {/* Couleur acacia */}
+          <div className="w-16 h-16 bg-acacia-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check className="h-10 w-10 text-acacia-600" />
           </div>
           <h2 className="text-xl font-medium text-gray-900 mb-2">Import terminé avec succès!</h2>
