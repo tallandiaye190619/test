@@ -59,6 +59,7 @@ const Layout = ({ children }) => {
         { nom: 'Mes Notes', chemin: '/eleve/mes-notes', icone: FileText },
         { nom: 'Emploi du temps', chemin: '/eleve/emploi-du-temps', icone: Calendar },
         { nom: 'Documents', chemin: '/eleve/documents', icone: BookOpen },
+        { nom: 'Paiements', chemin: '/eleve/paiements', icone: DollarSign },
         { nom: 'Notifications', chemin: '/eleve/notifications', icone: Bell }
       ],
       parent: [

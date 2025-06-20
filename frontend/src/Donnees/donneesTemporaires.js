@@ -472,43 +472,80 @@ export const emploisDuTemps = [
 export const paiements = [
   {
     id: 1,
-    eleveId: 1,
+    eleveId: 1, // Ibrahima Sarr
     montant: 50000,
     datePayment: '2024-01-15',
     typePaiement: 'Scolarité',
     statut: 'payé',
     methode: 'Orange Money',
-    numeroRecu: 'RC001'
+    numeroRecu: 'RC001',
+    commentaire: 'Premier versement scolarité T1'
   },
   {
     id: 2,
-    eleveId: 2,
+    eleveId: 2, // Aissatou Sarr
     montant: 45000,
     datePayment: '2024-01-10',
     typePaiement: 'Scolarité',
     statut: 'payé',
     methode: 'Wave',
-    numeroRecu: 'RC002'
+    numeroRecu: 'RC002',
+    commentaire: 'Versement scolarité T1'
   },
   {
     id: 3,
-    eleveId: 3,
+    eleveId: 3, // Mamadou Diop
     montant: 50000,
     datePayment: '2024-01-20',
     typePaiement: 'Scolarité',
     statut: 'en_attente',
     methode: 'Espèces',
-    numeroRecu: 'RC003'
+    numeroRecu: 'RC003',
+    commentaire: 'En attente de confirmation'
   },
-  { // Paiement pour Talla Ndiaye (ID 4)
-    id: 4,
+  {
+    id: 4, // Paiement pour Talla Ndiaye (ID 4)
     eleveId: 4,
     montant: 75000,
+    datePayment: '2023-09-01',
+    typePaiement: 'Inscription',
+    statut: 'payé',
+    methode: 'Virement bancaire',
+    numeroRecu: 'INS001',
+    commentaire: 'Frais d\'inscription année scolaire'
+  },
+  {
+    id: 5, // Autre paiement pour Talla Ndiaye (ID 4)
+    eleveId: 4,
+    montant: 60000,
+    datePayment: '2023-10-05',
+    typePaiement: 'Scolarité',
+    statut: 'payé',
+    methode: 'Orange Money',
+    numeroRecu: 'RC004',
+    commentaire: '1ère tranche scolarité'
+  },
+  {
+    id: 6, // Autre paiement pour Talla Ndiaye (ID 4)
+    eleveId: 4,
+    montant: 60000,
     datePayment: '2024-01-05',
     typePaiement: 'Scolarité',
     statut: 'payé',
-    methode: 'Virement bancaire',
-    numeroRecu: 'RC004'
+    methode: 'Wave',
+    numeroRecu: 'RC005',
+    commentaire: '2ème tranche scolarité'
+  },
+  {
+    id: 7, // Autre paiement pour Talla Ndiaye (ID 4)
+    eleveId: 4,
+    montant: 15000,
+    datePayment: '2024-03-20',
+    typePaiement: 'Cantine',
+    statut: 'payé',
+    methode: 'Espèces',
+    numeroRecu: 'CANT001',
+    commentaire: 'Paiement cantine Mars'
   }
 ];
 
@@ -653,6 +690,7 @@ export const obtenirDonneesParRole = (role, utilisateurId) => {
         emploiDuTemps: emploisDuTemps.filter(edt => edt.classe === eleveData?.classe),
         // Filtrer les documents par la classe de l'élève
         documents: documents.filter(d => d.classe === eleveData?.classe),
+        paiements: paiements.filter(p => p.eleveId === utilisateurId),
         notifications: notifications.filter(n => n.destinataires.includes('eleve')),
         classes: classeEleve ? [classeEleve] : [], // Ne donner que sa propre classe
         matieres: matieres // L'élève a besoin de toutes les matières pour l'affichage des notes
