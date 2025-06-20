@@ -30,7 +30,7 @@ const Layout = ({ children }) => {
 
   const obtenirMenusParRole = (role) => {
     const menusCommuns = [
-      { nom: 'Tableau de bord', chemin: '/tableau-de-bord', icone: Home }
+      { nom: 'Tableau de bord', chemin: `/${role}/tableau-de-bord`, icone: Home }
     ];
 
     const menusParRole = {
@@ -48,17 +48,18 @@ const Layout = ({ children }) => {
       ],
       enseignant: [
         ...menusCommuns,
-        { nom: 'Mes Classes', chemin: '/mes-classes', icone: Users },
-        { nom: 'Gestion Notes', chemin: '/gestion-notes', icone: ClipboardList },
-        { nom: 'Documents', chemin: '/documents', icone: FileText },
-        { nom: 'Notifications', chemin: '/notifications', icone: Bell }
+        { nom: 'Mon Emploi-du-temps', chemin: '/enseignant/emploi-du-temps', icone: Calendar },
+        { nom: 'Mes Classes', chemin: '/enseignant/mes-classes', icone: Users },
+        { nom: 'Gestion Notes', chemin: '/enseignant/gestion-notes', icone: ClipboardList },
+        { nom: 'Documents', chemin: '/enseignant/documents', icone: FileText },
+        { nom: 'Notifications', chemin: '/enseignant/notifications', icone: Bell }
       ],
       eleve: [
         ...menusCommuns,
-        { nom: 'Mes Notes', chemin: '/mes-notes', icone: FileText },
-        { nom: 'Emploi du temps', chemin: '/emploi-du-temps', icone: Calendar },
-        { nom: 'Documents', chemin: '/documents', icone: BookOpen },
-        { nom: 'Notifications', chemin: '/notifications', icone: Bell }
+        { nom: 'Mes Notes', chemin: '/eleve/mes-notes', icone: FileText },
+        { nom: 'Emploi du temps', chemin: '/eleve/emploi-du-temps', icone: Calendar },
+        { nom: 'Documents', chemin: '/eleve/documents', icone: BookOpen },
+        { nom: 'Notifications', chemin: '/eleve/notifications', icone: Bell }
       ],
       parent: [
         ...menusCommuns,

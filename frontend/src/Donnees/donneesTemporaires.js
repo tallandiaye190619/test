@@ -1,4 +1,4 @@
-// Données simulées pour le système de gestion d'école
+// donneesTemporaires.js (MODIFIÉ)
 
 export const utilisateurs = [
   {
@@ -21,6 +21,7 @@ export const utilisateurs = [
     telephone: '77 234 56 78',
     matiere: 'Mathématiques',
     classes: ['6ème A', '5ème B'],
+    classesIds: [1, 2],
     photo: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
   },
   {
@@ -31,7 +32,7 @@ export const utilisateurs = [
     motDePasse: 'parent123',
     role: 'parent',
     telephone: '77 345 67 89',
-    enfants: [1, 2],
+    enfants: [1, 2, 8], // Ibrahima Sarr (ID 1), Aissatou Sarr (ID 2)
     photo: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
   },
   {
@@ -57,6 +58,31 @@ export const utilisateurs = [
     role: 'comptable',
     telephone: '77 456 78 90',
     photo: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
+  },
+  { // Nouvel utilisateur parent pour Mamadou Diop
+    id: 6,
+    nom: 'Diop',
+    prenom: 'Mamadou Parent',
+    email: 'diop.parent@email.sn',
+    motDePasse: 'parent123',
+    role: 'parent',
+    telephone: '77 567 89 01',
+    enfants: [3,8], // Mamadou Diop (ID 3)
+    photo: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
+  },
+  { // Nouvel utilisateur élève pour Talla Ndiaye
+    id: 8,
+    nom: 'Ndiaye',
+    prenom: 'Talla',
+    email: 'talla.ndiaye@eleve.sn',
+    motDePasse: 'eleve123',
+    role: 'eleve',
+    classe: 'Tle S2-A',
+    numeroMatricule: 'EL004',
+    dateNaissance: '2001-08-10',
+    sexe: 'M',
+    parentId: 6, // Parent de Talla Ndiaye
+    photo: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
   }
 ];
 
@@ -104,7 +130,7 @@ export const eleves = [
     photo: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
   },
   {
-    id: 4,
+    id: 4, // L'ID 4 est maintenant utilisé par un élève qui a des notes
     nom: 'Ndiaye',
     prenom: 'Talla',
     sexe: 'M',
@@ -125,9 +151,11 @@ export const enseignants = [
     nom: 'Ndiaye',
     prenom: 'Moussa',
     email: 'moussa.ndiaye@ecole.sn',
+    motDePasse: 'prof123',
     telephone: '77 234 56 78',
     matiere: 'Mathématiques',
     classes: ['6ème A', '5ème B'],
+    classesIds: [1, 2],
     dateEmbauche: '2020-09-01',
     statut: 'actif',
     photo: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
@@ -137,9 +165,11 @@ export const enseignants = [
     nom: 'Ba',
     prenom: 'Khadija',
     email: 'khadija.ba@ecole.sn',
+    motDePasse: 'prof123',
     telephone: '77 678 90 12',
     matiere: 'Français',
-    classes: ['6ème A', 'CM2'],
+    classes: ['6ème A', 'CM2 A', 'Tle S2-A'],
+    classesIds: [1, 3, 4],
     dateEmbauche: '2019-02-15',
     statut: 'actif',
     photo: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
@@ -153,6 +183,7 @@ export const classes = [
     niveau: 'Collège',
     effectif: 35,
     enseignantPrincipal: 'Moussa Ndiaye',
+    enseignantPrincipalId: 2,
     salle: 'Salle 101'
   },
   {
@@ -161,6 +192,7 @@ export const classes = [
     niveau: 'Collège',
     effectif: 30,
     enseignantPrincipal: 'Moussa Ndiaye',
+    enseignantPrincipalId: 2,
     salle: 'Salle 102'
   },
   {
@@ -169,14 +201,16 @@ export const classes = [
     niveau: 'Primaire',
     effectif: 28,
     enseignantPrincipal: 'Khadija Ba',
+    enseignantPrincipalId: 7,
     salle: 'Salle 201'
   },
   {
     id: 4,
     nom: 'Tle S2-A',
-    niveau: 'Primaire',
+    niveau: 'Lycée',
     effectif: 28,
     enseignantPrincipal: 'Khadija Ba',
+    enseignantPrincipalId: 7,
     salle: 'Salle 301'
   }
 ];
@@ -192,10 +226,11 @@ export const matieres = [
 ];
 
 export const notes = [
+  // Notes pour Ibrahima Sarr (ID 1)
   {
     id: 1,
     eleveId: 1,
-    matiereId: 1,
+    matiereId: 1, // Mathématiques
     enseignantId: 2,
     trimestre: 1,
     valeur: 15,
@@ -206,7 +241,7 @@ export const notes = [
   {
     id: 2,
     eleveId: 1,
-    matiereId: 2,
+    matiereId: 2, // Français
     enseignantId: 7,
     trimestre: 1,
     valeur: 12,
@@ -215,19 +250,111 @@ export const notes = [
     date: '2024-01-20'
   },
   {
+    id: 9,
+    eleveId: 1,
+    matiereId: 1, // Mathématiques
+    enseignantId: 2,
+    trimestre: 2,
+    valeur: 16.5,
+    coefficient: 4,
+    type: 'Composition',
+    date: '2024-04-10'
+  },
+  {
+    id: 10,
+    eleveId: 1,
+    matiereId: 3, // Anglais
+    enseignantId: null, // Si l'enseignant n'est pas spécifié
+    trimestre: 2,
+    valeur: 14,
+    coefficient: 3,
+    type: 'Oral',
+    date: '2024-04-15'
+  },
+  {
+    id: 11,
+    eleveId: 1,
+    matiereId: 4, // HG
+    enseignantId: null,
+    trimestre: 2,
+    valeur: 10.5,
+    coefficient: 3,
+    type: 'Devoir',
+    date: '2024-04-20'
+  },
+  // Notes pour Aissatou Sarr (ID 2)
+  {
     id: 3,
     eleveId: 2,
-    matiereId: 1,
+    matiereId: 1, // Mathématiques
     enseignantId: 2,
     trimestre: 1,
     valeur: 18,
     coefficient: 4,
     type: 'Devoir',
     date: '2024-01-15'
+  },
+  // Notes pour Mamadou Diop (ID 3)
+  {
+    id: 4,
+    eleveId: 3,
+    matiereId: 1, // Mathématiques
+    enseignantId: 2,
+    trimestre: 1,
+    valeur: 13,
+    coefficient: 4,
+    type: 'Devoir',
+    date: '2024-01-16'
+  },
+  {
+    id: 5,
+    eleveId: 3,
+    matiereId: 3, // Anglais
+    enseignantId: null,
+    trimestre: 1,
+    valeur: 10,
+    coefficient: 3,
+    type: 'Devoir',
+    date: '2024-01-22'
+  },
+  // Notes pour Talla Ndiaye (ID 4 - ajouté en tant qu'utilisateur élève)
+  {
+    id: 6,
+    eleveId: 4,
+    matiereId: 1, // Mathématiques
+    enseignantId: 2,
+    trimestre: 1,
+    valeur: 17,
+    coefficient: 4,
+    type: 'Devoir',
+    date: '2024-01-17'
+  },
+  {
+    id: 7,
+    eleveId: 4,
+    matiereId: 2, // Français
+    enseignantId: 7,
+    trimestre: 1,
+    valeur: 14.5,
+    coefficient: 4,
+    type: 'Composition',
+    date: '2024-01-23'
+  },
+  {
+    id: 8,
+    eleveId: 4,
+    matiereId: 5, // SVT
+    enseignantId: null,
+    trimestre: 1,
+    valeur: 11,
+    coefficient: 3,
+    type: 'Interrogation',
+    date: '2024-01-25'
   }
 ];
 
 export const emploisDuTemps = [
+  // Cours de Moussa Ndiaye (ID 2)
   {
     id: 1,
     classe: '6ème A',
@@ -235,8 +362,40 @@ export const emploisDuTemps = [
     heure: '08:00-09:00',
     matiere: 'Mathématiques',
     enseignant: 'Moussa Ndiaye',
+    enseignantId: 2,
     salle: 'Salle 101'
   },
+  {
+    id: 4,
+    classe: '6ème A',
+    jour: 'Mercredi',
+    heure: '10:00-11:00',
+    matiere: 'Mathématiques',
+    enseignant: 'Moussa Ndiaye',
+    enseignantId: 2,
+    salle: 'Salle 101'
+  },
+  {
+    id: 5,
+    classe: '5ème B',
+    jour: 'Mardi',
+    heure: '14:00-15:00',
+    matiere: 'Mathématiques',
+    enseignant: 'Moussa Ndiaye',
+    enseignantId: 2,
+    salle: 'Salle 102'
+  },
+  {
+    id: 6,
+    classe: '5ème B',
+    jour: 'Jeudi',
+    heure: '09:00-10:00',
+    matiere: 'Mathématiques',
+    enseignant: 'Moussa Ndiaye',
+    enseignantId: 2,
+    salle: 'Salle 102'
+  },
+  // Cours de Khadija Ba (ID 7)
   {
     id: 2,
     classe: '6ème A',
@@ -244,8 +403,61 @@ export const emploisDuTemps = [
     heure: '09:00-10:00',
     matiere: 'Français',
     enseignant: 'Khadija Ba',
+    enseignantId: 7,
     salle: 'Salle 101'
   },
+  {
+    id: 7,
+    classe: 'CM2 A',
+    jour: 'Mardi',
+    heure: '08:00-09:00',
+    matiere: 'Français',
+    enseignant: 'Khadija Ba',
+    enseignantId: 7,
+    salle: 'Salle 201'
+  },
+  {
+    id: 8,
+    classe: 'Tle S2-A',
+    jour: 'Jeudi',
+    heure: '10:00-11:00',
+    matiere: 'Français',
+    enseignant: 'Khadija Ba',
+    enseignantId: 7,
+    salle: 'Salle 301'
+  },
+  {
+    id: 9,
+    classe: 'CM2 A',
+    jour: 'Vendredi',
+    heure: '14:00-15:00',
+    matiere: 'Histoire',
+    enseignant: 'Khadija Ba',
+    enseignantId: 7,
+    salle: 'Salle 201'
+  },
+  // Exemple de cours pour la classe Tle S2-A (pour l'élève Talla Ndiaye)
+  {
+    id: 10,
+    classe: 'Tle S2-A',
+    jour: 'Lundi',
+    heure: '08:00-09:00',
+    matiere: 'Philosophie',
+    enseignant: 'Mme Diouf',
+    enseignantId: null, // Enseignant non listé
+    salle: 'Salle 302'
+  },
+  {
+    id: 11,
+    classe: 'Tle S2-A',
+    jour: 'Lundi',
+    heure: '09:00-10:00',
+    matiere: 'Mathématiques',
+    enseignant: 'Moussa Ndiaye',
+    enseignantId: 2,
+    salle: 'Salle 302'
+  },
+  // Exemple de cours sans enseignant attribué à Moussa ou Khadija
   {
     id: 3,
     classe: '6ème A',
@@ -287,6 +499,16 @@ export const paiements = [
     statut: 'en_attente',
     methode: 'Espèces',
     numeroRecu: 'RC003'
+  },
+  { // Paiement pour Talla Ndiaye (ID 4)
+    id: 4,
+    eleveId: 4,
+    montant: 75000,
+    datePayment: '2024-01-05',
+    typePaiement: 'Scolarité',
+    statut: 'payé',
+    methode: 'Virement bancaire',
+    numeroRecu: 'RC004'
   }
 ];
 
@@ -319,7 +541,7 @@ export const documents = [
     titre: 'Cours de Mathématiques - Chapitre 1',
     type: 'cours',
     matiere: 'Mathématiques',
-    classe: '6ème A',
+    classe: '6ème A', // Assurez-vous que cette classe existe et qu'au moins un élève est dedans
     enseignantId: 2,
     dateAjout: '2024-01-10',
     taille: '2.5 MB',
@@ -335,9 +557,30 @@ export const documents = [
     dateAjout: '2024-01-12',
     taille: '1.8 MB',
     format: 'PDF'
+  },
+  { // Nouveau document pour la classe Tle S2-A (pour l'élève Talla Ndiaye)
+    id: 3,
+    titre: 'Examen Blanc de Philosophie S2',
+    type: 'devoirs',
+    matiere: 'Philosophie',
+    classe: 'Tle S2-A', // Classe de Talla Ndiaye
+    enseignantId: null, // Si l'enseignant n'est pas spécifié
+    dateAjout: '2024-05-10',
+    taille: '3.1 MB',
+    format: 'PDF'
+  },
+  { // Autre document pour 5ème B
+    id: 4,
+    titre: 'TD de Sciences Physiques',
+    type: 'exercices',
+    matiere: 'Physique-Chimie',
+    classe: '5ème B',
+    enseignantId: 2,
+    dateAjout: '2024-03-01',
+    taille: '1.2 MB',
+    format: 'DOCX'
   }
 ];
-
 export const statistiques = {
   nombreEleves: 93,
   nombreEnseignants: 12,
@@ -388,21 +631,31 @@ export const obtenirDonneesParRole = (role, utilisateurId) => {
       };
     case 'enseignant':
       const enseignant = enseignants.find(e => e.id === utilisateurId);
+      const classesEnseigneesParIds = enseignant && enseignant.classesIds
+        ? classes.filter(classe => enseignant.classesIds.includes(classe.id))
+        : [];
       return {
-        classes: enseignant ? enseignant.classes : [],
-        eleves: eleves.filter(e => enseignant?.classes.includes(e.classe)),
+        classes: classesEnseigneesParIds,
+        eleves: eleves.filter(e => classesEnseigneesParIds.some(c => c.nom === e.classe)),
         notes: notes.filter(n => n.enseignantId === utilisateurId),
         documents: documents.filter(d => d.enseignantId === utilisateurId),
-        notifications: notifications.filter(n => n.destinataires.includes('enseignant'))
+        notifications: notifications.filter(n => n.destinataires.includes('enseignant')),
+        emploisDuTemps: emploisDuTemps.filter(edt => edt.enseignantId === utilisateurId)
       };
     case 'eleve':
       const eleveData = eleves.find(e => e.id === utilisateurId);
+      // Récupérer la classe de l'élève connecté si elle existe
+      const classeEleve = classes.find(c => c.nom === eleveData?.classe);
       return {
         profil: eleveData,
         notes: notes.filter(n => n.eleveId === utilisateurId),
-        emploiDuTemps: emploisDuTemps.filter(e => e.classe === eleveData?.classe),
+        // Filtrer l'emploi du temps pour la classe de l'élève
+        emploiDuTemps: emploisDuTemps.filter(edt => edt.classe === eleveData?.classe),
+        // Filtrer les documents par la classe de l'élève
         documents: documents.filter(d => d.classe === eleveData?.classe),
-        notifications: notifications.filter(n => n.destinataires.includes('eleve'))
+        notifications: notifications.filter(n => n.destinataires.includes('eleve')),
+        classes: classeEleve ? [classeEleve] : [], // Ne donner que sa propre classe
+        matieres: matieres // L'élève a besoin de toutes les matières pour l'affichage des notes
       };
     case 'parent':
       const parent = utilisateurs.find(u => u.id === utilisateurId);
@@ -421,7 +674,9 @@ export const obtenirDonneesParRole = (role, utilisateurId) => {
           montantCollecte: statistiques.montantCollecte,
           montantAttendu: statistiques.montantAttendu,
           nombreEleves: statistiques.nombreEleves
-        }
+        },
+        classes,
+        matieres
       };
     default:
       return {};

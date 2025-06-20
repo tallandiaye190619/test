@@ -5,7 +5,7 @@ import { AuthProvider, useAuth } from './context/MonContext';
 import ClassesPage from './Pages/administrateur/ClassesPages';
 import ElevesPage from './Pages/administrateur/ElevesPage';
 import EmploisDuTempsPage from './Pages/administrateur/EmploidetempsPage';
-import EnseignantPage from './Pages/administrateur/EnseignatPAge';
+import EnseignantPage from './Pages/administrateur/EnseignatPage';
 import ImportElevesPage from './Pages/administrateur/ImportElevesPage';
 import MatieresPage from './Pages/administrateur/MatieresPage';
 import NotesBulletinsPage from './Pages/administrateur/NotesPages';
@@ -14,6 +14,15 @@ import PaiementsPage from './Pages/administrateur/PaiementsPage';
 import GestionPaiements from './Pages/comptable/GestionPaiements';
 import GestionRecus from './Pages/comptable/GestionRecus';
 import StatistiquesFinancieres from './Pages/comptable/Statistiques';
+import DocumentsEleve from './Pages/eleve/DocumentsEleve';
+import EmploiDuTemps from './Pages/eleve/EmploiDuTemps';
+import MesNotes from './Pages/Eleve/MesNotes';
+import NotificationsEleve from './Pages/Eleve/NotificationsEleve';
+import Documents from './Pages/enseignant/Documents';
+import GestionNotes from './Pages/Enseignant/GestionNotes';
+import MesClasses from './Pages/Enseignant/MesClasses';
+import MonEmploiDuTemps from './Pages/enseignant/MonEmploiDuTemps';
+import NotificationsEnseignant from './Pages/Enseignant/NotificationsEnseignant';
 import TableauDeBord from './Pages/TableuDeBord';
 
 const RouteProtegee = ({ children }) => {
@@ -73,7 +82,22 @@ const AppRoutes = () => {
         <Route path="/admin/notifications" element={<Notifications />} />
         <Route path="/admin/import-eleves" element={<ImportElevesPage />} />
         
-        {/* Routes Administrateur */}
+        {/* Routes Enseignant */}
+        <Route path="/enseignant/tableau-de-bord" element={<TableauDeBord />} />
+        <Route path="/enseignant/emploi-du-temps" element={<MonEmploiDuTemps />} />
+        <Route path="/enseignant/mes-classes" element={<MesClasses />} />
+        <Route path="/enseignant/gestion-notes" element={<GestionNotes />} />
+        <Route path="/enseignant/documents" element={<Documents />} />
+        <Route path="/enseignant/notifications" element={<NotificationsEnseignant />} />
+
+        {/* Routes Élève */}
+        <Route path="/eleve/tableau-de-bord" element={<TableauDeBord />} />
+        <Route path="/eleve/mes-notes" element={<MesNotes />} />
+        <Route path="/eleve/emploi-du-temps" element={<EmploiDuTemps />} />
+        <Route path="/eleve/documents" element={<DocumentsEleve />} />
+        <Route path="/eleve/notifications" element={<NotificationsEleve />} />
+        
+        {/* Routes Comptable */}
         <Route path="/comptable/tableau-de-bord" element={<TableauDeBord />} />
         <Route path="/comptable/gestion-paiements" element={<GestionPaiements />} />
         <Route path="/comptable/statistiques-financieres" element={<StatistiquesFinancieres />} />
