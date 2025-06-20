@@ -95,7 +95,7 @@ const Layout = ({ children }) => {
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-2">
             <School className="h-7 w-7 text-fleuve-600" /> {/* Couleur fleuve */}
-            <span className="text-xl font-bold text-gray-800">GSCAB</span>
+            <span className="text-xl font-bold text-gray-800">CCHT</span>
           </div>
           <button onClick={() => setSidebarOuverte(false)} className="lg:hidden p-1 rounded-full text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
             <X className="h-6 w-6" />
