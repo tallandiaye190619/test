@@ -64,10 +64,10 @@ const Layout = ({ children }) => {
       ],
       parent: [
         ...menusCommuns,
-        { nom: 'Mes Enfants', chemin: '/mes-enfants', icone: Users },
-        { nom: 'Suivi Scolaire', chemin: '/suivi-scolaire', icone: FileText },
-        { nom: 'Paiements', chemin: '/paiements', icone: DollarSign },
-        { nom: 'Notifications', chemin: '/notifications', icone: Bell }
+        { nom: 'Mes Enfants', chemin: '/parent/mes-enfants', icone: Users },
+        { nom: 'Suivi Scolaire', chemin: '/parent/suivi-scolaire', icone: FileText },
+        { nom: 'Paiements', chemin: '/parent/paiements', icone: DollarSign },
+        { nom: 'Notifications', chemin: '/parent/notifications', icone: Bell }
       ],
       comptable: [
         ...menusCommuns,

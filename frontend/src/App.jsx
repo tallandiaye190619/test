@@ -24,6 +24,10 @@ import GestionNotes from './Pages/Enseignant/GestionNotes';
 import MesClasses from './Pages/Enseignant/MesClasses';
 import MonEmploiDuTemps from './Pages/enseignant/MonEmploiDuTemps';
 import NotificationsEnseignant from './Pages/Enseignant/NotificationsEnseignant';
+import HistoriquePaiementsParents from './Pages/parent/HistoriquePaiementsParent';
+import MesEnfants from './Pages/parent/Mesenfants';
+import NotificationsParents from './Pages/parent/NotificationsParents';
+import SuiviScolaireEnfant from './Pages/parent/SuiviScolaire';
 import TableauDeBord from './Pages/TableuDeBord';
 
 const RouteProtegee = ({ children }) => {
@@ -98,7 +102,15 @@ const AppRoutes = () => {
         <Route path="/eleve/documents" element={<DocumentsEleve />} />
         <Route path="/eleve/paiements" element={<HistoriquePaiementsEleve />} />
         <Route path="/eleve/notifications" element={<NotificationsEleve />} />
-        
+
+        {/* Routes Parent */}
+        <Route path="/parent/tableau-de-bord" element={<TableauDeBord />} />
+        <Route path="/parent/mes-enfants" element={<MesEnfants />} />
+        <Route path="/parent/suivi-scolaire" element={<SuiviScolaireEnfant />} />
+        <Route path="/parent/paiements" element={<HistoriquePaiementsParents />} />
+        <Route path="/parent/notifications" element={<NotificationsParents />} />
+
+
         {/* Routes Comptable */}
         <Route path="/comptable/tableau-de-bord" element={<TableauDeBord />} />
         <Route path="/comptable/gestion-paiements" element={<GestionPaiements />} />
