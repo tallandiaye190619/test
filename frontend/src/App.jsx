@@ -7,6 +7,7 @@ import ElevesPage from './Pages/administrateur/ElevesPage';
 import EmploisDuTempsPage from './Pages/administrateur/EmploidetempsPage';
 import EnseignantPage from './Pages/administrateur/EnseignatPAge';
 import MatieresPage from './Pages/administrateur/MatieresPage';
+import NotesBulletinsPage from './Pages/administrateur/NotesPages';
 import TableauDeBordAdministrateur from './Pages/administrateur/TableuDeBord';
 
 const RouteProtegee = ({ children }) => {
@@ -59,6 +60,7 @@ const AppRoutes = () => {
         <Route path="/admin/classes" element={<ClassesPage />} />
         <Route path="/admin/matieres" element={<MatieresPage />} />
         <Route path="/admin/emplois-du-temps" element={<EmploisDuTempsPage />} />
+        <Route path="/admin/notes-bulletins" element={<NotesBulletinsPage />} />
         {/* Redirection pour routes inconnues */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
