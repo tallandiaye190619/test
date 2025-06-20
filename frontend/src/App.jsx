@@ -9,6 +9,7 @@ import EnseignantPage from './Pages/administrateur/EnseignatPAge';
 import MatieresPage from './Pages/administrateur/MatieresPage';
 import NotesBulletinsPage from './Pages/administrateur/NotesPages';
 import Notifications from './Pages/administrateur/NotificationsPage';
+import PaiementsPage from './Pages/administrateur/PaiementsPage';
 import TableauDeBordAdministrateur from './Pages/administrateur/TableuDeBord';
 
 const RouteProtegee = ({ children }) => {
@@ -62,6 +63,7 @@ const AppRoutes = () => {
         <Route path="/admin/matieres" element={<MatieresPage />} />
         <Route path="/admin/emplois-du-temps" element={<EmploisDuTempsPage />} />
         <Route path="/admin/notes-bulletins" element={<NotesBulletinsPage />} />
+        <Route path="/admin/paiements" element={<PaiementsPage />} />
         <Route path="/admin/notifications" element={<Notifications />} />
         {/* Redirection pour routes inconnues */}
         <Route path="*" element={<Navigate to="/" replace />} />
