@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './context/MonContext';
 import ClassesPage from './Pages/administrateur/ClassesPages';
 import ElevesPage from './Pages/administrateur/ElevesPage';
 import EnseignantPage from './Pages/administrateur/EnseignatPAge';
+import MatieresPage from './Pages/administrateur/MatieresPage';
 import TableauDeBordAdministrateur from './Pages/administrateur/TableuDeBord';
 
 const RouteProtegee = ({ children }) => {
@@ -55,6 +56,7 @@ const AppRoutes = () => {
         <Route path="/admin/eleves" element={<ElevesPage />} />
         <Route path="/admin/enseignants" element={<EnseignantPage />} />
         <Route path="/admin/classes" element={<ClassesPage />} />
+        <Route path="/admin/matieres" element={<MatieresPage />} />
         {/* Redirection pour routes inconnues */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
