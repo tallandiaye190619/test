@@ -6,6 +6,7 @@ import ClassesPage from './Pages/administrateur/ClassesPages';
 import ElevesPage from './Pages/administrateur/ElevesPage';
 import EmploisDuTempsPage from './Pages/administrateur/EmploidetempsPage';
 import EnseignantPage from './Pages/administrateur/EnseignatPAge';
+import ImportElevesPage from './Pages/administrateur/ImportElevesPage';
 import MatieresPage from './Pages/administrateur/MatieresPage';
 import NotesBulletinsPage from './Pages/administrateur/NotesPages';
 import Notifications from './Pages/administrateur/NotificationsPage';
@@ -65,6 +66,8 @@ const AppRoutes = () => {
         <Route path="/admin/notes-bulletins" element={<NotesBulletinsPage />} />
         <Route path="/admin/paiements" element={<PaiementsPage />} />
         <Route path="/admin/notifications" element={<Notifications />} />
+        <Route path="/admin/import-eleves" element={<ImportElevesPage />} />
+
         {/* Redirection pour routes inconnues */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
