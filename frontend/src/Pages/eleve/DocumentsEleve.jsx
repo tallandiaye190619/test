@@ -2,6 +2,8 @@ import {
   BookOpen, // Pour la matière
   Calendar // Pour la date d'ajout
   ,
+
+
   Download,
   Eye,
   FileText,
@@ -132,7 +134,7 @@ const DocumentsEleve = () => {
       </div>
 
       {/* Statistiques rapides */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
         {documentTypesOptions.map(typeOption => {
           const count = documents.filter(doc => doc.type === typeOption.value).length;
           return (

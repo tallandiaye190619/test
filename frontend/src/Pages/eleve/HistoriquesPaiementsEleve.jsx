@@ -1,16 +1,17 @@
 import {
-    Calendar,
-    CreditCard,
-    DollarSign,
-    Download,
-    Eye,
-    FileText,
-    Filter,
-    Info // Pour icônes d'info dans le modal
-    ,
+  Calendar,
+  CreditCard,
+  DollarSign,
+  Download,
+  Eye,
+  FileText,
+  Filter,
+  Info // Pour icônes d'info dans le modal
+  ,
 
-    Search,
-    X
+
+  Search,
+  X
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../context/MonContext';
@@ -162,7 +163,7 @@ const HistoriquePaiementsEleve = () => {
                       {paiement.typePaiement}
                     </span>
                   </td>
-                  <td className="table-cell flex items-center">
+                  <td className="table-cell  items-center">
                     <CreditCard className="h-4 w-4 mr-2 text-gray-500" />{paiement.methode}
                   </td>
                   <td className="table-cell">{new Date(paiement.datePayment).toLocaleDateString('fr-FR')}</td>
