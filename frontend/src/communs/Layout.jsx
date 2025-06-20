@@ -69,9 +69,9 @@ const Layout = ({ children }) => {
       ],
       comptable: [
         ...menusCommuns,
-        { nom: 'Gestion Paiements', chemin: '/gestion-paiements', icone: DollarSign },
-        { nom: 'Statistiques', chemin: '/statistiques-financieres', icone: FileText },
-        { nom: 'Reçus', chemin: '/recus', icone: FileText }
+        { nom: 'Gestion Paiements', chemin: '/comptable/gestion-paiements', icone: DollarSign },
+        { nom: 'Statistiques', chemin: '/comptable/statistiques-financieres', icone: FileText },
+        { nom: 'Reçus', chemin: '/comptable/recus', icone: FileText }
       ]
     };
 

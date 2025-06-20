@@ -8,9 +8,9 @@ import {
   TrendingUp,
   Users
 } from 'lucide-react';
-import { useAuth } from '../../context/MonContext';
+import { useAuth } from '../context/MonContext';
 
-const TableauDeBordAdministrateur = () => {
+const TableauDeBord = () => {
   const { utilisateur, donnees } = useAuth();
 
   const obtenirStatistiquesParRole = () => {
@@ -298,4 +298,4 @@ const TableauDeBordAdministrateur = () => {
   );
 };
 
-export default TableauDeBordAdministrateur;
+export default TableauDeBord;
