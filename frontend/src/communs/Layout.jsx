@@ -44,7 +44,9 @@ const Layout = ({ children }) => {
         { nom: 'Notes & Bulletins', chemin: '/admin/notes-bulletins', icone: FileText },
         { nom: 'Paiements', chemin: '/admin/paiements', icone: DollarSign },
         { nom: 'Notifications', chemin: '/admin/notifications', icone: Bell },
-        { nom: 'Import Élèves', chemin: '/admin/import-eleves', icone: Upload }
+        { nom: 'Import Élèves', chemin: '/admin/import-eleves', icone: Upload },
+        //{ nom: 'Gestion Utilisateurs', chemin: '/admin/gestion-utilisateurs', icone: Users2 } 
+
       ],
       enseignant: [
         ...menusCommuns,

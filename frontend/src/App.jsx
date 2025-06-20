@@ -6,6 +6,7 @@ import ClassesPage from './Pages/administrateur/ClassesPages';
 import ElevesPage from './Pages/administrateur/ElevesPage';
 import EmploisDuTempsPage from './Pages/administrateur/EmploidetempsPage';
 import EnseignantPage from './Pages/administrateur/EnseignatPage';
+import GestionUtilisateurs from './Pages/administrateur/GestionUtilisateurs';
 import ImportElevesPage from './Pages/administrateur/ImportElevesPage';
 import MatieresPage from './Pages/administrateur/MatieresPage';
 import NotesBulletinsPage from './Pages/administrateur/NotesPages';
@@ -86,6 +87,7 @@ const AppRoutes = () => {
         <Route path="/admin/paiements" element={<PaiementsPage />} />
         <Route path="/admin/notifications" element={<Notifications />} />
         <Route path="/admin/import-eleves" element={<ImportElevesPage />} />
+        <Route path="/admin/gestion-utilisateurs" element={<GestionUtilisateurs />} />
         
         {/* Routes Enseignant */}
         <Route path="/enseignant/tableau-de-bord" element={<TableauDeBord />} />

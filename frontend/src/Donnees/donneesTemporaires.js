@@ -1,4 +1,4 @@
-// donneesTemporaires.js (VERSION FINALE CONSOLIDÉE)
+
 
 export const utilisateurs = [
   {
@@ -535,7 +535,12 @@ export const emploisDuTemps = [
   // --- Autres cours (non attribués à des profs spécifiques) ---
   { id: 3, classe: '6ème A', jour: 'Mardi', heure: '08:00-09:00', matiere: 'Anglais', enseignant: 'Fatou Diallo', salle: 'Salle 101' },
   { id: 45, classe: '6ème A', jour: 'Lundi', heure: '15:00-16:00', matiere: 'EPS', enseignant: 'Coach Amina', salle: 'Terrain Foot' },
-  { id: 46, classe: 'CM2 A', jour: 'Jeudi', heure: '16:00-17:00', matiere: 'Musique', enseignant: 'M. Ly', salle: 'Salle Musique' }
+  { id: 46, classe: 'CM2 A', jour: 'Jeudi', heure: '16:00-17:00', matiere: 'Musique', enseignant: 'M. Ly', salle: 'Salle Musique' },
+  { id: 47, classe: 'CE1 B', jour: 'Lundi', heure: '08:00-09:00', matiere: 'Mathématiques', enseignant: 'M. Dia', salle: 'Salle 105' },
+  { id: 48, classe: 'CE1 B', jour: 'Mardi', heure: '10:00-11:00', matiere: 'Lecture', enseignant: 'Mme Gaye', salle: 'Salle 105' },
+  { id: 49, classe: '3ème B', jour: 'Mardi', heure: '08:00-09:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 203' },
+  { id: 50, classe: '3ème B', jour: 'Mercredi', heure: '09:00-10:00', matiere: 'Arabe', enseignant: 'Imam Fall', salle: 'Salle Mosquée' },
+  { id: 51, classe: '2nde C', jour: 'Vendredi', heure: '08:00-09:00', matiere: 'SVT', enseignant: 'Moussa Sankhare', enseignantId: 16, salle: 'Salle Labo SVT' }
 ];
 
 export const paiements = [
