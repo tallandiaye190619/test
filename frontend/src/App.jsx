@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Connexion from './communs/connexion';
 import Layout from './communs/Layout';
 import { AuthProvider, useAuth } from './context/MonContext';
+import ClassesPage from './Pages/administrateur/ClassesPages';
 import ElevesPage from './Pages/administrateur/ElevesPage';
 import EnseignantPage from './Pages/administrateur/EnseignatPAge';
 import TableauDeBordAdministrateur from './Pages/administrateur/TableuDeBord';
@@ -53,7 +54,7 @@ const AppRoutes = () => {
         <Route path="/admin/tableau-de-bord" element={<TableauDeBordAdministrateur />} />
         <Route path="/admin/eleves" element={<ElevesPage />} />
         <Route path="/admin/enseignants" element={<EnseignantPage />} />
-        
+        <Route path="/admin/classes" element={<ClassesPage />} />
         {/* Redirection pour routes inconnues */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
