@@ -191,7 +191,7 @@ const TableauDeBord = () => {
     <div className="space-y-8 fade-in">
   {/* Header */}
   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-    <h1 className="text-3xl sm:text-xl font-bold text-fleuve-700">
+    <h1 className="text-md lg:text-2xl font-bold text-fleuve-700">
       Tableau de bord – {utilisateur?.role?.charAt(0).toUpperCase() + utilisateur?.role?.slice(1)}
     </h1>
     <span className="text-sm text-gray-500 mt-2 sm:mt-0">
