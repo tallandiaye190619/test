@@ -24,7 +24,7 @@ import Documents from './Pages/enseignant/Documents';
 import GestionNotes from './Pages/enseignant/GestionNotes';
 import MesClasses from './Pages/enseignant/MesClasses';
 import MonEmploiDuTemps from './Pages/enseignant/MonEmploiDuTemps';
-import NotificationsEnseignant from './Pages/Enseignant/NotificationsEnseignant';
+import NotificationsEnseignant from './Pages/enseignant/NotificationsEnseignant';
 import HistoriquePaiementsParents from './Pages/parent/HistoriquePaiementsParent';
 import MesEnfants from './Pages/parent/Mesenfants';
 import NotificationsParents from './Pages/parent/NotificationsParents';
