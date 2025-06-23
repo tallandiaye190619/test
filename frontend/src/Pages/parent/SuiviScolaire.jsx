@@ -2,11 +2,8 @@ import {
     AlertTriangle,
     BookOpen,
     CheckCircle,
-    ClipboardCheck, // Pour les détails des paiements/documents
-    CreditCard // Pour la méthode de paiement
-    ,
-
-
+    ClipboardCheck,
+    CreditCard,
     DollarSign,
     Download,
     Eye,
@@ -16,11 +13,11 @@ import {
     Users,
     X
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState } from 'react'; // Ajout de useMemo
 import { useAuth } from '../../context/MonContext';
 
 const SuiviScolaireEnfant = () => {
-  const { donnees } = useAuth();
+  const { donnees, utilisateur } = useAuth();
   const [rechercheTexte, setRechercheTexte] = useState('');
 
   // États pour les modals
@@ -29,22 +26,36 @@ const SuiviScolaireEnfant = () => {
   const [modalDocumentsOuvert, setModalDocumentsOuvert] = useState(false);
   const [enfantSelectionneModal, setEnfantSelectionneModal] = useState(null); // Enfant pour lequel un modal est ouvert
 
-  const mesEnfants = donnees.enfants || [];
+  // Données brutes du contexte
+  const tousLesEleves = donnees.eleves || [];
   const toutesLesNotes = donnees.notes || [];
   const tousLesPaiements = donnees.paiements || [];
   const tousLesDocuments = donnees.documents || [];
   const toutesLesMatieres = donnees.matieres || [];
-  const toutesLesClasses = donnees.classes || []; // Pour obtenir le nom de la classe par ID si besoin
+  // const toutesLesClasses = donnees.classes || []; // Pas directement utilisé ici, mais bien dans le contexte
 
-  const enfantsFiltres = mesEnfants.filter(enfant =>
-    enfant.prenom?.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
-    enfant.nom?.toLowerCase().includes(rechercheTexte.toLowerCase())
+  const estParentConnecte = utilisateur && utilisateur.role === 'parent';
+
+  // Filtrer les enfants associés à ce parent (plus robuste)
+  
+   const mesEnfants = estParentConnecte
+    ? tousLesEleves.filter(eleve => {
+        // Le filtrage se fait maintenant par enseignantPrincipalId dans l'objet classe
+        return eleve.parentId === utilisateur.id;
+      })
+    : [];
+
+  const enfantsFiltres = mesEnfants.filter(eleve =>
+    eleve.prenom?.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
+    eleve.nom?.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
+    eleve.classe?.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
+    eleve.numeroMatricule?.toLowerCase().includes(rechercheTexte.toLowerCase())
   );
 
   // Fonctions d'aide pour obtenir les données spécifiques à chaque enfant
   const obtenirDernieresNotes = (enfantId) => {
     const notesEnfant = toutesLesNotes.filter(n => n.eleveId === enfantId);
-    return notesEnfant.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
+    return notesEnfant.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3); // 3 dernières notes
   };
 
   const obtenirStatutPaiements = (enfantId) => {
@@ -55,13 +66,13 @@ const SuiviScolaireEnfant = () => {
     return {
       paye: totalPaye,
       enAttente: totalEnAttente,
-      derniersPaiements: paiementsEnfant.sort((a, b) => new Date(b.datePayment) - new Date(a.datePayment)).slice(0, 2)
+      derniersPaiements: paiementsEnfant.sort((a, b) => new Date(b.datePayment) - new Date(a.datePayment)).slice(0, 2) // 2 derniers paiements
     };
   };
 
   const obtenirDocumentsRecents = (classeNom) => {
     const documentsClasse = tousLesDocuments.filter(d => d.classe === classeNom);
-    return documentsClasse.sort((a, b) => new Date(b.dateAjout) - new Date(a.dateAjout)).slice(0, 2);
+    return documentsClasse.sort((a, b) => new Date(b.dateAjout) - new Date(a.dateAjout)).slice(0, 2); // 2 derniers docs
   };
 
   const calculerMoyenneMatiere = (notesList, matiereId) => {
@@ -167,26 +178,30 @@ const SuiviScolaireEnfant = () => {
 
                         {/* Notes par matière */}
                         <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
-                            {matieresAvecNotes.map(matiere => (
-                                <div key={matiere.id} className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                                    <div className="flex items-center justify-between">
-                                        <h4 className="font-semibold text-gray-900 flex items-center">
-                                            <GraduationCap className="h-4 w-4 mr-2 text-fleuve-500" /> {matiere.nom}
-                                        </h4>
-                                        <span className={`text-xl font-bold ${obtenirMention(matiere.moyenne).couleur}`}>
-                                            {matiere.moyenne.toFixed(2)}/20
-                                        </span>
+                            {matieresAvecNotes.length > 0 ? (
+                                matieresAvecNotes.map(matiere => (
+                                    <div key={matiere.id} className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                                        <div className="flex items-center justify-between">
+                                            <h4 className="font-semibold text-gray-900 flex items-center">
+                                                <GraduationCap className="h-4 w-4 mr-2 text-fleuve-500" /> {matiere.nom}
+                                            </h4>
+                                            <span className={`text-xl font-bold ${obtenirMention(matiere.moyenne).couleur}`}>
+                                                {matiere.moyenne.toFixed(2)}/20
+                                            </span>
+                                        </div>
+                                        <ul className="list-disc list-inside text-sm text-gray-700 mt-2">
+                                            {matiere.notesDetail.map(note => (
+                                                <li key={note.id} className="flex justify-between items-center py-1">
+                                                    <span>{note.type} (Coef. {note.coefficient}):</span>
+                                                    <span className={`font-semibold ${obtenirMention(note.valeur).couleur}`}>{note.valeur}/20</span>
+                                                </li>
+                                            ))}
+                                        </ul>
                                     </div>
-                                    <ul className="list-disc list-inside text-sm text-gray-700 mt-2">
-                                        {matiere.notesDetail.map(note => (
-                                            <li key={note.id} className="flex justify-between items-center py-1">
-                                                <span>{note.type} (Coef. {note.coefficient}):</span>
-                                                <span className={`font-semibold ${obtenirMention(note.valeur).couleur}`}>{note.valeur}/20</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))}
+                                ))
+                            ) : (
+                                <div className="text-center py-4 text-gray-500">Aucune note détaillée disponible pour cet enfant.</div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -474,19 +489,19 @@ const SuiviScolaireEnfant = () => {
                 {/* Boutons d'action rapides (ouvrir les modals ici) */}
                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 border-t pt-4 border-gray-200">
                   <button
-                    onClick={() => openNotesModal(enfant)}
+                    onClick={() => console.log('Aller aux notes de:', enfant.id)} // Garde les logs ou mettez des navigations réelles
                     className="btn-primary flex items-center justify-center shadow-md hover:shadow-lg flex-1 py-2.5"
                   >
                     <FileText className="h-4 w-4 mr-2" /> Notes détaillées
                   </button>
                   <button
-                    onClick={() => openPaiementsModal(enfant)}
+                    onClick={() => console.log('Aller aux paiements de:', enfant.id)}
                     className="btn-secondary flex items-center justify-center shadow-sm hover:shadow-md flex-1 py-2.5"
                   >
                     <DollarSign className="h-4 w-4 mr-2" /> Paiements
                   </button>
                   <button
-                    onClick={() => openDocumentsModal(enfant)}
+                    onClick={() => console.log('Aller aux documents de:', enfant.id)}
                     className="btn-secondary flex items-center justify-center shadow-sm hover:shadow-md flex-1 py-2.5"
                   >
                     <BookOpen className="h-4 w-4 mr-2" /> Documents
@@ -500,7 +515,10 @@ const SuiviScolaireEnfant = () => {
             <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-500">Aucun enfant trouvé pour cette sélection.</p>
             <p className="text-gray-400 text-sm mt-2">
-              Veuillez vérifier les informations de votre compte parent.
+              {mesEnfants.length === 0
+                ? "Vos enfants n'ont pas encore été associés à votre compte."
+                : "Veuillez ajuster votre recherche."
+              }
             </p>
           </div>
         )}

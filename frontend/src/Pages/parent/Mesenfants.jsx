@@ -1,11 +1,12 @@
 import {
   BookOpen,
   Calendar,
-  Eye, // Pour les salles de classe
-  GraduationCap, // Pour le téléphone
-  Mail // Pour l'email
-  , // Pour l'emploi du temps
-  MapPin, // Pour les infos de l'élève
+  DollarSign,
+  Eye,
+  FileText,
+  GraduationCap,
+  Mail,
+  MapPin,
   Phone,
   School,
   Search,
@@ -16,7 +17,7 @@ import { useState } from 'react';
 import { useAuth } from '../../context/MonContext';
 
 const MesEnfants = () => {
-  const { donnees } = useAuth();
+  const { donnees, utilisateur } = useAuth();
   const [rechercheTexte, setRechercheTexte] = useState('');
 
   // États pour les modals
@@ -24,15 +25,24 @@ const MesEnfants = () => {
   const [modalProfilOuvert, setModalProfilOuvert] = useState(false);
   const [enfantSelectionneModal, setEnfantSelectionneModal] = useState(null);
 
-  const mesEnfants = donnees.enfants || [];
-  const tousLesEmploisDuTemps = donnees.emploisDuTemps || [];
-  const toutesLesMatieres = donnees.matieres || []; // Pour les noms des matières dans l'emploi du temps
+  const estParentConnecte = utilisateur && utilisateur.role === 'parent';
 
-  const enfantsFiltres = mesEnfants.filter(enfant =>
-    enfant.prenom?.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
-    enfant.nom?.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
-    enfant.classe?.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
-    enfant.numeroMatricule?.toLowerCase().includes(rechercheTexte.toLowerCase())
+  const tousLesEnfants = donnees.eleves || [];
+  const tousLesEmploisDuTemps = donnees.emploisDuTemps || [];
+  const toutesLesMatieres = donnees.matieres || [];
+
+  const mesEnfants = estParentConnecte
+    ? tousLesEnfants.filter(eleve => {
+        // Le filtrage se fait maintenant par enseignantPrincipalId dans l'objet classe
+        return eleve.parentId === utilisateur.id;
+      })
+    : [];
+
+  const enfantsFiltres = mesEnfants.filter(eleve =>
+    eleve.prenom?.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
+    eleve.nom?.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
+    eleve.classe?.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
+    eleve.numeroMatricule?.toLowerCase().includes(rechercheTexte.toLowerCase())
   );
 
   // Fonctions pour ouvrir/fermer les modals spécifiques
@@ -58,13 +68,15 @@ const MesEnfants = () => {
   const ModalEmploiDuTemps = () => {
     if (!enfantSelectionneModal) return null;
 
-    const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+    const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']; // Étendu
     const heures = [
       '08:00-09:00', '09:00-10:00', '10:00-11:00', '11:00-12:00',
       '14:00-15:00', '15:00-16:00', '16:00-17:00', '17:00-18:00'
     ];
 
-    const emploiDuTempsEnfant = tousLesEmploisDuTemps.filter(cours => cours.classe === enfantSelectionneModal.classe);
+    const emploiDuTempsEnfant = tousLesEmploisDuTemps.filter(cours =>
+      String(cours.classeId) === String(enfantSelectionneModal.classeId)
+    );
 
     const obtenirCours = (jour, heure) => {
       return emploiDuTempsEnfant.find(cours => cours.jour === jour && cours.heure === heure);
@@ -77,7 +89,7 @@ const MesEnfants = () => {
                     <div className="flex justify-between items-center mb-4 border-b pb-4">
                         <h3 className="text-xl font-bold text-gray-900 flex items-center">
                             <BookOpen className="h-6 w-6 mr-2 text-fleuve-600" />
-                            Emploi du Temps de {enfantSelectionneModal.prenom} {enfantSelectionneModal.nom}
+                            Emploi du Temps de {enfantSelectionneModal.prenom} {enfantSelectionneModal.nom} ({enfantSelectionneModal.classe})
                         </h3>
                         <button onClick={closeEmploiDuTempsModal} className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors">
                             <X className="h-6 w-6" />
@@ -105,7 +117,10 @@ const MesEnfants = () => {
                                             return (
                                                 <td key={`${jour}-${heure}`} className="px-2 py-3 text-center align-top">
                                                     {cours ? (
-                                                        <div className="bg-fleuve-100 border border-fleuve-200 rounded-lg p-2 h-full flex flex-col justify-between items-center text-center">
+                                                        <div
+                                                          className="bg-fleuve-100 border border-fleuve-200 rounded-lg p-2 h-full flex flex-col justify-between items-center text-center shadow-sm"
+                                                          title={`Matière: ${cours.matiere}\nEnseignant: ${cours.enseignant}\nSalle: ${cours.salle}`}
+                                                        >
                                                             <div className="text-xs font-bold text-fleuve-900 mb-1">{cours.matiere}</div>
                                                             <div className="text-xs text-fleuve-700 flex items-center justify-center">
                                                                 <GraduationCap className="h-3 w-3 mr-1" />{cours.enseignant}
@@ -267,14 +282,28 @@ const MesEnfants = () => {
 
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200">
                 <button
-                  onClick={() => openEmploiDuTempsModal(enfant)} // Nouveau bouton pour Emploi du temps
+                  onClick={() => openEmploiDuTempsModal(enfant)}
                   className="btn-secondary flex items-center justify-center shadow-sm hover:shadow-md py-2.5 px-4"
                 >
                   <BookOpen className="h-4 w-4 mr-2" />
                   Emploi du temps
                 </button>
                 <button
-                  onClick={() => openProfilModal(enfant)} // Nouveau bouton pour le Profil
+                  onClick={() => console.log('Aller aux notes de:', enfant.id)} // Garde les logs ou mettez des navigations réelles
+                  className="btn-secondary flex items-center justify-center shadow-sm hover:shadow-md py-2.5 px-4"
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  Voir les notes
+                </button>
+                <button
+                  onClick={() => console.log('Aller aux paiements de:', enfant.id)}
+                  className="btn-secondary flex items-center justify-center shadow-sm hover:shadow-md py-2.5 px-4"
+                >
+                  <DollarSign className="h-4 w-4 mr-2" />
+                  Historique de paiements
+                </button>
+                <button
+                  onClick={() => openProfilModal(enfant)}
                   className="btn-primary flex items-center justify-center shadow-md hover:shadow-lg py-2.5 px-4"
                 >
                   <Eye className="h-4 w-4 mr-2" />

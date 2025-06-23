@@ -1,9 +1,9 @@
 import {
-    BookOpen,
-    Calendar,
-    Clock,
-    GraduationCap,
-    MapPin
+  BookOpen,
+  Calendar,
+  Clock,
+  GraduationCap,
+  MapPin
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../context/MonContext';

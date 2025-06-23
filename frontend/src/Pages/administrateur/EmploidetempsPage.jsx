@@ -10,37 +10,44 @@ import {
   X
 } from 'lucide-react';
 import { useState } from 'react';
-import { useAuth } from '../../context/MonContext';
+import { useAuth } from '../../context/MonContext'; // Correction: Chemin du contexte
 
-const EmploisDuTempsPage = () => {
+const EmploisDuTempsPage = () => { // Renommé EmploisDuTempsPage pour la cohérence
   const { donnees } = useAuth();
-  const [classeSelectionnee, setClasseSelectionnee] = useState('');
+  const [classeSelectionnee, setClasseSelectionnee] = useState(''); // Stockera l'ID de la classe
   const [modalOuverte, setModalOuverte] = useState(false);
   const [coursSelectionne, setCours] = useState(null);
   const [typeModal, setTypeModal] = useState('');
 
   const emploisDuTemps = donnees.emploisDuTemps || [];
-  const classes = donnees.classes || [];
+  const classes = donnees.classes || []; // Liste complète des classes (avec id et nom)
   const enseignants = donnees.enseignants || [];
   const matieres = donnees.matieres || [];
 
-  const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+  const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']; // Étendu
   const heures = [
     '08:00-09:00', '09:00-10:00', '10:00-11:00', '11:00-12:00',
     '14:00-15:00', '15:00-16:00', '16:00-17:00', '17:00-18:00'
   ];
 
-  const emploiFiltré = emploisDuTemps.filter(cours => 
-    !classeSelectionnee || cours.classe === classeSelectionnee
-  );
+  // LOGIQUE MODIFIÉE: L'emploi du temps filtré est vide si "Toutes les classes" est sélectionné
+  const emploiFiltré = classeSelectionnee
+    ? emploisDuTemps.filter(cours => String(cours.classId) === String(classeSelectionnee))
+    : []; // Si aucune classe sélectionnée, le tableau est vide
 
   const obtenirCours = (jour, heure) => {
     return emploiFiltré.find(cours => cours.jour === jour && cours.heure === heure);
   };
 
   const ouvrirModal = (type, cours = null) => {
+    // Si ajout, pré-remplir la classId et le nom de la classe
+    if (type === 'ajouter' && classeSelectionnee) {
+        const classeObj = classes.find(c => c.id === parseInt(classeSelectionnee));
+        setCours({ ...cours, classId: parseInt(classeSelectionnee), classe: classeObj?.nom });
+    } else {
+        setCours(cours);
+    }
     setTypeModal(type);
-    setCours(cours);
     setModalOuverte(true);
   };
 
@@ -52,19 +59,19 @@ const EmploisDuTempsPage = () => {
 
   const FormulaireCours = () => {
     const [formData, setFormData] = useState(coursSelectionne || {
-      classe: classeSelectionnee || '',
+      classId: '', // Stocke l'ID
       jour: '',
       heure: '',
-      matiere: '',
-      enseignant: '',
+      matiere: '', // Nom de la matière
+      enseignant: '', // Nom de l'enseignant
       salle: ''
     });
 
     const gererSoumission = (e) => {
       e.preventDefault();
       console.log('Données cours:', formData);
+      // Ici, la logique d'ajout/modification utiliserait formData.classId
       fermerModal();
-      // Ici, vous ajouteriez la logique pour ajouter ou modifier le cours
     };
 
     return (
@@ -75,14 +82,14 @@ const EmploisDuTempsPage = () => {
               Classe *
             </label>
             <select
-              value={formData.classe}
-              onChange={(e) => setFormData({...formData, classe: e.target.value})}
+              value={formData.classId} // Utilise classId ici
+              onChange={(e) => setFormData({...formData, classId: parseInt(e.target.value)})}
               className="input-field"
               required
             >
               <option value="">Sélectionner une classe</option>
               {classes.map(classe => (
-                <option key={classe.id} value={classe.nom}>{classe.nom}</option>
+                <option key={classe.id} value={classe.id}>{classe.nom}</option> 
               ))}
             </select>
           </div>
@@ -178,6 +185,11 @@ const EmploisDuTempsPage = () => {
     );
   };
 
+  // Fonction utilitaire pour obtenir le nom de la classe à partir de son ID
+  const getClassNameById = (classId) => {
+      return classes.find(c => c.id === classId)?.nom || 'Classe inconnue';
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -197,76 +209,85 @@ const EmploisDuTempsPage = () => {
       {/* Sélection de classe */}
       <div className="card p-6 shadow-sm">
         <div className="flex items-center space-x-4">
-          <Calendar className="h-6 w-6 text-fleuve-600" /> {/* Couleur fleuve */}
+          <Calendar className="h-6 w-6 text-fleuve-600" />
           <select
             value={classeSelectionnee}
             onChange={(e) => setClasseSelectionnee(e.target.value)}
             className="input-field max-w-xs" 
           >
-            <option value="">Toutes les classes</option>
+            <option value="">Sélectionner une classe</option>
             {classes.map(classe => (
-              <option key={classe.id} value={classe.nom}>{classe.nom}</option>
+              <option key={classe.id} value={classe.id}>{classe.nom}</option> 
             ))}
           </select>
         </div>
       </div>
 
-      {/* Grille de l'emploi du temps */}
-      <div className="card table-container p-0">
-        <table className="table">
-          <thead className="table-header">
-            <tr>
-              <th className="table-header-cell">
-                Heures
-              </th>
-              {jours.map(jour => (
-                <th key={jour} className="table-header-cell text-center">
-                  {jour}
+      {/* Grille de l'emploi du temps - Affichage conditionnel */}
+      {classeSelectionnee ? ( // Affiche la grille seulement si une classe est sélectionnée
+        <div className="card table-container p-0 overflow-x-auto">
+          <table className="table">
+            <thead className="table-header">
+              <tr>
+                <th className="table-header-cell">
+                  Heures
                 </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="table-body">
-            {heures.map(heure => (
-              <tr key={heure} className="table-row">
-                <td className="table-cell font-medium text-gray-900 bg-gray-50 border-r border-gray-200"> {/* Ajout de bordure */}
-                  {heure}
-                </td>
-                {jours.map(jour => {
-                  const cours = obtenirCours(jour, heure);
-                  return (
-                    <td key={`${jour}-${heure}`} className="px-2 py-3 text-center">
-                      {cours ? (
-                        <div 
-                          className="bg-fleuve-100 border border-fleuve-200 rounded-lg p-2 cursor-pointer hover:bg-fleuve-200 transition-colors duration-200 shadow-sm hover:shadow-md"
-                          onClick={() => ouvrirModal('voir', cours)}
-                        >
-                          <div className="text-xs font-medium text-fleuve-900">
-                            {cours.matiere}
-                          </div>
-                          <div className="text-xs text-fleuve-700">
-                            {cours.enseignant}
-                          </div>
-                          <div className="text-xs text-fleuve-600">
-                            {cours.salle}
-                          </div>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => ouvrirModal('ajouter', { jour, heure, classe: classeSelectionnee })}
-                          className="w-full h-16 border-2 border-dashed border-gray-300 rounded-lg hover:border-fleuve-400 hover:bg-fleuve-50 transition-colors duration-200 flex items-center justify-center"
-                        >
-                          <Plus className="h-4 w-4 text-gray-400" />
-                        </button>
-                      )}
-                    </td>
-                  );
-                })}
+                {jours.map(jour => (
+                  <th key={jour} className="table-header-cell text-center">
+                    {jour}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="table-body">
+              {heures.map(heure => (
+                <tr key={heure} className="table-row">
+                  <td className="table-cell font-medium text-gray-900 bg-gray-50 border-r border-gray-200">
+                    {heure}
+                  </td>
+                  {jours.map(jour => {
+                    const cours = obtenirCours(jour, heure);
+                    return (
+                      <td key={`${jour}-${heure}`} className="px-2 py-3 text-center">
+                        {cours ? (
+                          <div 
+                            className="bg-fleuve-100 border border-fleuve-200 rounded-lg p-2 cursor-pointer hover:bg-fleuve-200 transition-colors duration-200 shadow-sm hover:shadow-md"
+                            onClick={() => ouvrirModal('voir', cours)}
+                          >
+                            <div className="text-xs font-medium text-fleuve-900">
+                              {cours.matiere}
+                            </div>
+                            <div className="text-xs text-fleuve-700">
+                              {cours.enseignant}
+                            </div>
+                            <div className="text-xs text-fleuve-600">
+                              {cours.salle}
+                            </div>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => ouvrirModal('ajouter', { jour, heure, classId: parseInt(classeSelectionnee) })} // Passe classId au lieu de classe nom
+                            className="w-full h-16 border-2 border-dashed border-gray-300 rounded-lg hover:border-fleuve-400 hover:bg-fleuve-50 transition-colors duration-200 flex items-center justify-center"
+                          >
+                            <Plus className="h-4 w-4 text-gray-400" />
+                          </button>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="text-center py-12 card shadow-sm">
+            <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-500 text-lg font-semibold">Sélectionnez une classe pour afficher l'emploi du temps.</p>
+            <p className="text-gray-400 text-sm mt-2">Utilisez le menu déroulant ci-dessus pour choisir une classe spécifique.</p>
+        </div>
+      )}
+
 
       {/* Modal */}
       {modalOuverte && (
@@ -274,7 +295,7 @@ const EmploisDuTempsPage = () => {
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl animate-scale-in">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-gray-900">
+                <h3 className="text-xl font-semibold text-gray-900">
                   {typeModal === 'ajouter' && 'Ajouter un cours'}
                   {typeModal === 'modifier' && 'Modifier le cours'}
                   {typeModal === 'voir' && 'Détails du cours'}
@@ -291,9 +312,9 @@ const EmploisDuTempsPage = () => {
               {typeModal === 'voir' ? (
                 <div className="space-y-4 fade-in">
                   <div className="text-center bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-inner">
-                    <BookOpen className="h-12 w-12 text-fleuve-600 mx-auto mb-4" /> {/* Icône plus grande et colorée */}
+                    <BookOpen className="h-12 w-12 text-fleuve-600 mx-auto mb-4" />
                     <h4 className="text-2xl font-bold text-gray-900">{coursSelectionne?.matiere}</h4>
-                    <p className="text-gray-600">{coursSelectionne?.classe}</p>
+                    <p className="text-gray-600">{getClassNameById(coursSelectionne?.classId)}</p> {/* Affiche le nom de la classe */}
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -320,7 +341,7 @@ const EmploisDuTempsPage = () => {
                   <div className="flex justify-center space-x-3 mt-6">
                     <button
                       onClick={() => {
-                        setTypeModal('modifier');
+                        ouvrirModal('modifier', coursSelectionne); // Ouvre en mode modifier avec les données actuelles
                       }}
                       className="btn-primary flex items-center shadow-sm hover:shadow-md"
                     >

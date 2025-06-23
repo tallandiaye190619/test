@@ -1,15 +1,16 @@
 import {
-    Calendar,
-    CreditCard,
-    DollarSign,
-    Download,
-    Eye,
-    FileText,
-    Filter,
-    Info // Pour icône d'info dans le modal
-    ,
-    Search,
-    X
+  Calendar,
+  CreditCard,
+  DollarSign,
+  Download,
+  Eye,
+  FileText,
+  Filter,
+  Info // Pour icône d'info dans le modal
+  ,
+
+  Search,
+  X
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../context/MonContext';
@@ -26,7 +27,7 @@ const HistoriquePaiementsParents = () => {
 
   // Les paiements sont déjà filtrés pour les enfants du parent via obtenirDonneesParRole
   const paiementsDesEnfants = donnees.paiements || [];
-  const mesEnfants = donnees.enfants || []; // Liste des objets enfants du parent
+  const mesEnfants = donnees.eleves || []; // Liste des objets enfants du parent
 
   const paiementsFiltres = paiementsDesEnfants.filter(paiement => {
     const enfant = mesEnfants.find(e => e.id === paiement.eleveId); // Trouver l'enfant pour la recherche

@@ -1,157 +1,224 @@
 import {
   AlertCircle,
+  ArrowLeftCircle, // Pour les boutons de navigation du slider
+  ArrowRightCircle, // Pour les boutons de navigation du slider
+  Bell // Pour les notifications
+  ,
   BookOpen,
   Calendar,
   CheckCircle,
   DollarSign,
   GraduationCap,
-  TrendingUp,
+  Icon,
+  TrendingDown,
+  TrendingUp, // Importation correcte pour TrendingDown
   Users
 } from 'lucide-react';
+import { useMemo, useRef } from 'react'; // Import de useMemo et useRef
 import { useAuth } from '../context/MonContext';
 
 const TableauDeBord = () => {
   const { utilisateur, donnees } = useAuth();
+  const sliderRef = useRef(null);
 
-  const obtenirStatistiquesParRole = () => {
+  // Calcul de mesClassesEnseignant plus tôt, pour être disponible
+  const mesClassesEnseignant = useMemo(() => {
+    // S'assurer que donnees.classes est un tableau pour le filtre
+    return donnees.classes?.filter(classe =>
+      classe.enseignantPrincipalId === utilisateur?.id
+    ) || [];
+  }, [donnees.classes, utilisateur]);
+
+  // La fonction obtient maintenant mesClassesEnseignant en paramètre
+  const obtenirStatistiquesParRole = (classesEnseignees) => {
     switch (utilisateur?.role) {
       case 'administrateur':
         return [
           {
             titre: 'Total Élèves',
-            valeur: donnees.statistiques?.nombreEleves || 0,
+            valeur: donnees.eleves?.length || 0, // Utilisation directe de donnees.eleves
             icone: Users,
-            couleur: 'bg-blue-500',
+            couleurBg: 'bg-fleuve-500',
+            couleurText: 'text-fleuve-900',
+            couleurIcon: 'text-white',
             tendance: '+5%'
           },
           {
             titre: 'Enseignants',
-            valeur: donnees.statistiques?.nombreEnseignants || 0,
+            valeur: donnees.enseignants?.length || 0, // Utilisation directe de donnees.enseignants
             icone: GraduationCap,
-            couleur: 'bg-green-500',
+            couleurBg: 'bg-acacia-500',
+            couleurText: 'text-acacia-900',
+            couleurIcon: 'text-white',
             tendance: '+2%'
           },
           {
             titre: 'Classes',
-            valeur: donnees.statistiques?.nombreClasses || 0,
+            valeur: donnees.classes?.length || 0, // Utilisation directe de donnees.classes
             icone: BookOpen,
-            couleur: 'bg-purple-500',
+            couleurBg: 'bg-soleil-500',
+            couleurText: 'text-soleil-900',
+            couleurIcon: 'text-white',
             tendance: '0%'
           },
           {
             titre: 'Revenus (FCFA)',
-            valeur: (donnees.statistiques?.montantCollecte || 0).toLocaleString(),
+            valeur: (donnees.paiements?.filter(p => p.statut === 'payé').reduce((sum, p) => sum + p.montant, 0) || 0).toLocaleString(), // Calcul direct
             icone: DollarSign,
-            couleur: 'bg-yellow-500',
+            couleurBg: 'bg-terre-500',
+            couleurText: 'text-terre-900',
+            couleurIcon: 'text-white',
             tendance: '+12%'
           }
         ];
       case 'enseignant':
+        const elevesMesClasses = donnees.eleves?.filter(e => classesEnseignees.some(c => c.nom === e.classe)).length || 0;
+        const notesSaisies = donnees.notes?.filter(n => n.enseignantId === utilisateur?.id).length || 0;
+        const documentsEnseignant = donnees.documents?.filter(d => d.enseignantId === utilisateur?.id).length || 0;
         return [
           {
             titre: 'Mes Classes',
-            valeur: donnees.classes?.length || 0,
+            valeur: classesEnseignees.length || 0,
             icone: BookOpen,
-            couleur: 'bg-blue-500'
+            couleurBg: 'bg-fleuve-500',
+            couleurText: 'text-fleuve-900',
+            couleurIcon: 'text-white'
           },
           {
             titre: 'Mes Élèves',
-            valeur: donnees.eleves?.length || 0,
+            valeur: elevesMesClasses,
             icone: Users,
-            couleur: 'bg-green-500'
+            couleurBg: 'bg-acacia-500',
+            couleurText: 'text-acacia-900',
+            couleurIcon: 'text-white'
           },
           {
             titre: 'Notes saisies',
-            valeur: donnees.notes?.length || 0,
+            valeur: notesSaisies,
             icone: CheckCircle,
-            couleur: 'bg-purple-500'
+            couleurBg: 'bg-soleil-500',
+            couleurText: 'text-soleil-900',
+            couleurIcon: 'text-white'
           },
           {
             titre: 'Documents',
-            valeur: donnees.documents?.length || 0,
+            valeur: documentsEnseignant,
             icone: BookOpen,
-            couleur: 'bg-yellow-500'
+            couleurBg: 'bg-terre-500',
+            couleurText: 'text-terre-900',
+            couleurIcon: 'text-white'
           }
         ];
       case 'eleve':
+        const notesEleve = donnees.notes?.filter(n => n.eleveId === utilisateur?.id).length || 0;
+        const documentsEleve = donnees.documents?.filter(d => d.classe === utilisateur?.classe).length || 0;
+        const notificationsNonLuesEleve = donnees.notifications?.filter(n => !n.lue && n.destinataires.includes('eleve')).length || 0;
         return [
           {
             titre: 'Ma Classe',
-            valeur: donnees.profil?.classe || 'N/A',
+            valeur: utilisateur?.classe || 'N/A',
             icone: BookOpen,
-            couleur: 'bg-blue-500'
+            couleurBg: 'bg-fleuve-500',
+            couleurText: 'text-fleuve-900',
+            couleurIcon: 'text-white'
           },
           {
             titre: 'Mes Notes',
-            valeur: donnees.notes?.length || 0,
+            valeur: notesEleve,
             icone: CheckCircle,
-            couleur: 'bg-green-500'
+            couleurBg: 'bg-acacia-500',
+            couleurText: 'text-acacia-900',
+            couleurIcon: 'text-white'
           },
           {
             titre: 'Documents',
-            valeur: donnees.documents?.length || 0,
+            valeur: documentsEleve,
             icone: BookOpen,
-            couleur: 'bg-purple-500'
+            couleurBg: 'bg-soleil-500',
+            couleurText: 'text-soleil-900',
+            couleurIcon: 'text-white'
           },
           {
             titre: 'Notifications',
-            valeur: donnees.notifications?.filter(n => !n.lue).length || 0,
+            valeur: notificationsNonLuesEleve,
             icone: AlertCircle,
-            couleur: 'bg-red-500'
+            couleurBg: 'bg-terre-500',
+            couleurText: 'text-terre-900',
+            couleurIcon: 'text-white'
           }
         ];
       case 'parent':
+        const enfantsP = donnees.enfants || [];
+        const paiementsPayesParents = donnees.paiements?.filter(p => p.statut === 'payé' && enfantsP.some(e => e.id === p.eleveId)).length || 0;
+        const paiementsEnAttenteParents = donnees.paiements?.filter(p => p.statut === 'en_attente' && enfantsP.some(e => e.id === p.eleveId)).length || 0;
+        const notificationsNonLuesParent = donnees.notifications?.filter(n => !n.lue && n.destinataires.includes('parent')).length || 0;
         return [
           {
             titre: 'Mes Enfants',
-            valeur: donnees.enfants?.length || 0,
+            valeur: enfantsP.length || 0,
             icone: Users,
-            couleur: 'bg-blue-500'
+            couleurBg: 'bg-fleuve-500',
+            couleurText: 'text-fleuve-900',
+            couleurIcon: 'text-white'
           },
           {
-            titre: 'Paiements',
-            valeur: donnees.paiements?.filter(p => p.statut === 'payé').length || 0,
+            titre: 'Paiements Payés',
+            valeur: paiementsPayesParents,
             icone: CheckCircle,
-            couleur: 'bg-green-500'
+            couleurBg: 'bg-acacia-500',
+            couleurText: 'text-acacia-900',
+            couleurIcon: 'text-white'
           },
           {
-            titre: 'En attente',
-            valeur: donnees.paiements?.filter(p => p.statut === 'en_attente').length || 0,
+            titre: 'Paiements Attente',
+            valeur: paiementsEnAttenteParents,
             icone: AlertCircle,
-            couleur: 'bg-yellow-500'
+            couleurBg: 'bg-soleil-500',
+            couleurText: 'text-soleil-900',
+            couleurIcon: 'text-white'
           },
           {
             titre: 'Notifications',
-            valeur: donnees.notifications?.filter(n => !n.lue).length || 0,
-            icone: AlertCircle,
-            couleur: 'bg-red-500'
+            valeur: notificationsNonLuesParent,
+            icone: Bell,
+            couleurBg: 'bg-terre-500',
+            couleurText: 'text-terre-900',
+            couleurIcon: 'text-white'
           }
         ];
       case 'comptable':
         return [
           {
             titre: 'Collecté (FCFA)',
-            valeur: (donnees.statistiques?.montantCollecte || 0).toLocaleString(),
+            valeur: (donnees.paiements?.filter(p => p.statut === 'payé').reduce((sum, p) => sum + p.montant, 0) || 0).toLocaleString(),
             icone: DollarSign,
-            couleur: 'bg-green-500'
+            couleurBg: 'bg-acacia-500',
+            couleurText: 'text-acacia-900',
+            couleurIcon: 'text-white'
           },
           {
             titre: 'Attendu (FCFA)',
-            valeur: (donnees.statistiques?.montantAttendu || 0).toLocaleString(),
+            valeur: (donnees.paiements?.filter(p => p.statut === 'en_attente').reduce((sum, p) => sum + p.montant, 0) || 0).toLocaleString(),
             icone: DollarSign,
-            couleur: 'bg-blue-500'
+            couleurBg: 'bg-fleuve-500',
+            couleurText: 'text-fleuve-900',
+            couleurIcon: 'text-white'
           },
           {
             titre: 'Paiements reçus',
             valeur: donnees.paiements?.filter(p => p.statut === 'payé').length || 0,
             icone: CheckCircle,
-            couleur: 'bg-green-500'
+            couleurBg: 'bg-soleil-500',
+            couleurText: 'text-soleil-900',
+            couleurIcon: 'text-white'
           },
           {
             titre: 'En attente',
             valeur: donnees.paiements?.filter(p => p.statut === 'en_attente').length || 0,
             icone: AlertCircle,
-            couleur: 'bg-yellow-500'
+            couleurBg: 'bg-terre-500',
+            couleurText: 'text-terre-900',
+            couleurIcon: 'text-white'
           }
         ];
       default:
@@ -159,7 +226,8 @@ const TableauDeBord = () => {
     }
   };
 
-  const statistiques = obtenirStatistiquesParRole();
+  // Passe mesClassesEnseignant à la fonction de statistiques
+  const statistiques = obtenirStatistiquesParRole(mesClassesEnseignant);
 
   const obtenirActivitesRecentes = () => {
     const activites = [];
@@ -180,6 +248,11 @@ const TableauDeBord = () => {
         { titre: 'Nouvelle note en Mathématiques', temps: 'Il y a 2h', type: 'note' },
         { titre: 'Document ajouté en Français', temps: 'Il y a 1 jour', type: 'document' }
       );
+    } else if (utilisateur?.role === 'parent') {
+        activites.push(
+            { titre: `Paiement reçu pour ${donnees.enfants?.[0]?.prenom || 'un enfant'}`, temps: 'Il y a 5h', type: 'paiement' },
+            { titre: `Nouvelle note pour ${donnees.enfants?.[0]?.prenom || 'un enfant'} en Français`, temps: 'Il y a 1 jour', type: 'note' }
+        );
     }
     
     return activites;
@@ -187,11 +260,26 @@ const TableauDeBord = () => {
 
   const activitesRecentes = obtenirActivitesRecentes();
 
+  // Logique du slider (pour les statistiques)
+  const scrollContainer = (direction) => {
+    if (sliderRef.current) {
+      // Défile d'une "carte" à la fois
+      const cardWidth = sliderRef.current.querySelector('.snap-center')?.offsetWidth || 0;
+      const scrollAmount = cardWidth + (window.innerWidth < 640 ? 16 : 24); // cardWidth + gap (px-2 ou px-3)
+      
+      sliderRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+
   return (
     <div className="space-y-8 fade-in">
   {/* Header */}
   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-    <h1 className="text-md lg:text-2xl font-bold text-fleuve-700">
+    <h1 className="text-xl lg:text-2xl font-bold text-gray-900">
       Tableau de bord – {utilisateur?.role?.charAt(0).toUpperCase() + utilisateur?.role?.slice(1)}
     </h1>
     <span className="text-sm text-gray-500 mt-2 sm:mt-0">
@@ -199,45 +287,78 @@ const TableauDeBord = () => {
     </span>
   </div>
 
-  {/* Statistiques */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    {statistiques.map((stat, index) => {
-      const IconeStat = stat.icone;
-      return (
-        <div key={index} className="card p-5">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-gray-500">{stat.titre}</p>
-              <p className="text-2xl font-bold text-gray-900">{stat.valeur}</p>
-              {stat.tendance && (
-                <p className="text-sm text-green-600 mt-1 flex items-center">
-                  <TrendingUp className="h-4 w-4 mr-1" />
-                  {stat.tendance}
-                </p>
-              )}
-            </div>
-            <div className={`p-3 rounded-full ${stat.couleur}`}>
-              <IconeStat className="h-6 w-6 text-white" />
+  {/* Statistiques (Slider) */}
+  <div className="relative">
+    <div 
+        ref={sliderRef}
+        className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-4 -mx-2"
+        style={{ scrollBehavior: 'smooth' }}
+    >
+      {statistiques.map((stat, index) => {
+        const IconeStat = stat.icone;
+        return (
+          <div 
+            key={index} 
+            className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/4 px-2 snap-start" // snap-start pour s'aligner au début
+          >
+            <div className={`card p-5 ${stat.couleurBg} border ${stat.couleurBg.replace('bg-', 'border-').replace('-500', '-200')} shadow-md transition-all duration-200 hover:shadow-lg`}>
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-sm text-white">{stat.titre}</p> {/* Texte blanc pour contrast */}
+                  <p className="text-2xl font-bold text-white">{stat.valeur}</p> {/* Texte blanc */}
+                  {stat.tendance && (
+                    <p className={`text-sm mt-1 flex items-center ${
+                      stat.tendance.startsWith('+') ? 'text-acacia-100' : 'text-terre-100' // Tendances en blanc sur fond coloré
+                    }`}>
+                      {stat.tendance.startsWith('+') ? <TrendingUp className="h-4 w-4 mr-1" /> : <TrendingDown className="h-4 w-4 mr-1" />}
+                      {stat.tendance}
+                    </p>
+                  )}
+                </div>
+                <div className={`p-3 rounded-full bg-opacity-30 ${stat.couleurBg}`}> {/* Cercle avec opacité */}
+                  <IconeStat className={`h-6 w-6 text-white`} /> {/* Icône blanche */}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      );
-    })}
+        );
+      })}
+    </div>
+    {/* Boutons de navigation du slider (visibles sur les écrans où le défilement est nécessaire) */}
+    {statistiques.length > (window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 4) && ( // Afficher si plus de cartes que de visibles
+        <>
+            <Icon 
+                onClick={() => scrollContainer('left')} 
+                className="absolute left-0 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-md text-gray-600 hover:bg-gray-100 p-2 z-10 hidden sm:block" // Caché sur mobile très petit, visible à partir de sm
+                aria-label="Previous slide"
+            >
+                <ArrowLeftCircle size={24} />
+            </Icon>
+            <Icon 
+                onClick={() => scrollContainer('right')} 
+                className="absolute right-0 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-md text-gray-600 hover:bg-gray-100 p-2 z-10 hidden sm:block" // Caché sur mobile très petit, visible à partir de sm
+                aria-label="Next slide"
+            >
+                <ArrowRightCircle size={24} />
+            </Icon>
+        </>
+    )}
   </div>
+
 
   {/* Activités + Événements */}
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
     {/* Activités récentes */}
-    <div className="card p-5">
+    <div className="card p-5 shadow-sm">
       <h3 className="text-lg font-bold text-fleuve-700 mb-4">Activités récentes</h3>
       <div className="space-y-3">
         {activitesRecentes.length > 0 ? (
           activitesRecentes.map((a, i) => (
-            <div key={i} className="flex items-center space-x-3 p-3 bg-fleuve-50 rounded-md">
-              <span className={`w-2 h-2 rounded-full ${
-                a.type === 'paiement' ? 'bg-green-500' :
-                a.type === 'note' ? 'bg-blue-500' :
-                a.type === 'document' ? 'bg-purple-500' : 'bg-gray-500'
+            <div key={i} className="flex items-center space-x-3 p-3 bg-fleuve-50 rounded-md border border-fleuve-200 shadow-sm">
+              <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
+                a.type === 'paiement' ? 'bg-acacia-500' :
+                a.type === 'note' ? 'bg-fleuve-500' :
+                a.type === 'document' ? 'bg-soleil-500' : 'bg-gray-500'
               }`} />
               <div className="flex-1">
                 <p className="text-sm font-semibold text-gray-900">{a.titre}</p>
@@ -246,27 +367,34 @@ const TableauDeBord = () => {
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-sm">Aucune activité récente</p>
+          <p className="text-gray-500 text-sm py-4 text-center">Aucune activité récente</p>
         )}
       </div>
     </div>
 
     {/* Événements */}
-    <div className="card p-5">
+    <div className="card p-5 shadow-sm">
       <h3 className="text-lg font-bold text-fleuve-700 mb-4">Prochains événements</h3>
       <div className="space-y-3">
-        <div className="flex items-center space-x-3 p-3 bg-acacia-50 rounded-md">
-          <Calendar className="h-5 w-5 text-acacia-600" />
+        <div className="flex items-center space-x-3 p-3 bg-acacia-50 rounded-md border border-acacia-200 shadow-sm">
+          <Calendar className="h-5 w-5 text-acacia-600 flex-shrink-0" />
           <div>
             <p className="text-sm font-semibold text-gray-900">Réunion des parents</p>
             <p className="text-xs text-gray-500">25 janvier 2024 à 15h00</p>
           </div>
         </div>
-        <div className="flex items-center space-x-3 p-3 bg-soleil-50 rounded-md">
-          <BookOpen className="h-5 w-5 text-soleil-600" />
+        <div className="flex items-center space-x-3 p-3 bg-soleil-50 rounded-md border border-soleil-200 shadow-sm">
+          <BookOpen className="h-5 w-5 text-soleil-600 flex-shrink-0" />
           <div>
             <p className="text-sm font-semibold text-gray-900">Compositions 1er trimestre</p>
             <p className="text-xs text-gray-500">30 janvier 2024</p>
+          </div>
+        </div>
+         <div className="flex items-center space-x-3 p-3 bg-fleuve-50 rounded-md border border-fleuve-200 shadow-sm">
+          <Calendar className="h-5 w-5 text-fleuve-600 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-gray-900">Sortie scolaire</p>
+            <p className="text-xs text-gray-500">15 mars 2024 (Classes 6ème/5ème)</p>
           </div>
         </div>
       </div>
@@ -274,27 +402,26 @@ const TableauDeBord = () => {
   </div>
 
   {/* Notifications importantes */}
-  {donnees.notifications && donnees.notifications.filter(n => !n.lue && n.priorite === 'haute').length > 0 && (
-    <div className="card border border-red-200 bg-red-50 p-5">
-      <h3 className="text-lg font-bold text-red-700 flex items-center mb-4">
+  {donnees.notifications && donnees.notifications.filter(n => !n.lue && n.priorite === 'urgente').length > 0 && (
+    <div className="card border border-terre-200 bg-terre-50 p-5 shadow-md">
+      <h3 className="text-lg font-bold text-terre-700 flex items-center mb-4">
         <AlertCircle className="h-5 w-5 mr-2" />
-        Notifications importantes
+        Notifications urgentes non lues
       </h3>
       <div className="space-y-2">
         {donnees.notifications
-          .filter(n => !n.lue && n.priorite === 'haute')
+          .filter(n => !n.lue && n.priorite === 'urgente')
           .slice(0, 3)
           .map((notification, i) => (
-            <div key={i} className="p-3 bg-white border border-red-100 rounded-md">
-              <p className="text-sm font-semibold text-red-900">{notification.titre}</p>
-              <p className="text-xs text-red-600 mt-1">{notification.message}</p>
+            <div key={notification.id} className="p-3 bg-white border border-terre-100 rounded-md shadow-sm">
+              <p className="text-sm font-semibold text-terre-900">{notification.titre}</p>
+              <p className="text-xs text-terre-600 mt-1 line-clamp-2">{notification.message}</p>
             </div>
           ))}
       </div>
     </div>
   )}
 </div>
-
   );
 };
 
