@@ -11,8 +11,8 @@ export const utilisateurs = [
   { id: 8, nom: 'Fall', prenom: 'Awa', email: 'awa.fall@ecole.sn', motDePasse: 'prof123', role: 'enseignant', telephone: '77 444 55 66', matiere: 'Anglais', classesIds: [3, 4, 7, 5], photo: 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1' },
   { id: 14, nom: 'Sankhare', prenom: 'Moussa', email: 'm.sankhare@ecole.sn', motDePasse: 'prof123', role: 'enseignant', telephone: '77 777 88 99', matiere: 'Sciences de la Vie et de la Terre', classesIds: [2, 5, 6], photo: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1' },
   // Parents (leurs IDs ici correspondent à leurs IDs dans le tableau 'utilisateurs' plus haut)
-  { id: 101, nom: 'Sarr', prenom: 'Ibrahima', email: 'ibrahima.sarr@eleve.sn', motDePasse: 'eleve123', role: 'eleve', classe: '6ème A', numeroMatricule: 'EL001', dateNaissance: '2010-05-15', sexe: 'M', parentId: 3, photo: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1' },
   // Les IDs des enfants dans `enfants` sont ceux du tableau `eleves`
+  { id: 101, nom: 'Sarr', prenom: 'Ibrahima', email: 'ibrahima.sarr@eleve.sn', motDePasse: 'eleve123', role: 'eleve', classe: '6ème A', numeroMatricule: 'EL001', dateNaissance: '2010-05-15', sexe: 'M', parentId: 3, photo: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1' },
   { id: 3, nom: 'Sow', prenom: 'Fatou', email: 'fatou.sow@parent.sn', motDePasse: 'parent123', role: 'parent', telephone: '77 345 67 89', enfants: [101, 102], photo: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1' },
   { id: 5, nom: 'Diallo', prenom: 'Marie', email: 'marie.diallo@parent.sn', motDePasse: 'parent123', role: 'parent', telephone: '77 987 65 43', enfants: [103, 104, 110], photo: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1' },
   { id: 9, nom: 'Traore', prenom: 'Abdou', email: 'famille.diouf@parent.sn', motDePasse: 'parent123', role: 'parent', telephone: '77 123 00 11', enfants: [109], photo: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1' },
@@ -100,123 +100,123 @@ export const notes = [
 export const emploisDuTemps = [
   // --- Cours de Moussa Ndiaye (ID 2) - Mathématiques ---
   // 6ème A (ID 1)
-  { id: 1, classeId: 1, classe: '6ème A', jour: 'Lundi', heure: '08:00-09:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
-  { id: 4, classeId: 1, classe: '6ème A', jour: 'Mercredi', heure: '10:00-11:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
-  { id: 16, classeId: 1, classe: '6ème A', jour: 'Vendredi', heure: '14:00-15:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
-  { id: 52, classeId: 1, classe: '6ème A', jour: 'Mardi', heure: '15:00-16:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
-  { id: 53, classeId: 1, classe: '6ème A', jour: 'Jeudi', heure: '08:00-09:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
-  { id: 54, classeId: 1, classe: '6ème A', jour: 'Samedi', heure: '09:00-10:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
+  { id: 1, classeId: 1, classe: '6ème A', jour: 'Lundi', heure: '08:00-09:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
+  { id: 4, classeId: 1, classe: '6ème A', jour: 'Mercredi', heure: '10:00-11:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
+  { id: 16, classeId: 1, classe: '6ème A', jour: 'Vendredi', heure: '14:00-15:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
+  { id: 52, classeId: 1, classe: '6ème A', jour: 'Mardi', heure: '15:00-16:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
+  { id: 53, classeId: 1, classe: '6ème A', jour: 'Jeudi', heure: '08:00-09:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
+  { id: 54, classeId: 1, classe: '6ème A', jour: 'Samedi', heure: '09:00-10:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 101' },
 
   // 5ème B (ID 2)
-  { id: 5, classeId: 2, classe: '5ème B', jour: 'Mardi', heure: '14:00-15:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 102' },
-  { id: 6, classeId: 2, classe: '5ème B', jour: 'Jeudi', heure: '09:00-10:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 102' },
-  { id: 55, classeId: 2, classe: '5ème B', jour: 'Lundi', heure: '11:00-12:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 102' },
-  { id: 56, classeId: 2, classe: '5ème B', jour: 'Mercredi', heure: '08:00-09:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 102' },
-  { id: 57, classeId: 2, classe: '5ème B', jour: 'Vendredi', heure: '10:00-11:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 102' },
+  { id: 5, classeId: 2, classe: '5ème B', jour: 'Mardi', heure: '14:00-15:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 102' },
+  { id: 6, classeId: 2, classe: '5ème B', jour: 'Jeudi', heure: '09:00-10:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 102' },
+  { id: 55, classeId: 2, classe: '5ème B', jour: 'Lundi', heure: '11:00-12:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 102' },
+  { id: 56, classeId: 2, classe: '5ème B', jour: 'Mercredi', heure: '08:00-09:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 102' },
+  { id: 57, classeId: 2, classe: '5ème B', jour: 'Vendredi', heure: '10:00-11:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 102' },
 
   // 2nde C (ID 5)
-  { id: 17, classeId: 5, classe: '2nde C', jour: 'Lundi', heure: '10:00-11:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 305' },
-  { id: 18, classeId: 5, classe: '2nde C', jour: 'Mercredi', heure: '08:00-09:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 305' },
-  { id: 19, classeId: 5, classe: '2nde C', jour: 'Vendredi', heure: '16:00-17:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 305' },
-  { id: 58, classeId: 5, classe: '2nde C', jour: 'Mardi', heure: '10:00-11:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 305' },
-  { id: 59, classeId: 5, classe: '2nde C', jour: 'Jeudi', heure: '14:00-15:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 305' },
+  { id: 17, classeId: 5, classe: '2nde C', jour: 'Lundi', heure: '10:00-11:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 305' },
+  { id: 18, classeId: 5, classe: '2nde C', jour: 'Mercredi', heure: '08:00-09:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 305' },
+  { id: 19, classeId: 5, classe: '2nde C', jour: 'Vendredi', heure: '16:00-17:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 305' },
+  { id: 58, classeId: 5, classe: '2nde C', jour: 'Mardi', heure: '10:00-11:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 305' },
+  { id: 59, classeId: 5, classe: '2nde C', jour: 'Jeudi', heure: '14:00-15:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 305' },
 
 
   // --- Cours de Khadija Ba (ID 6) - Français ---
   // 6ème A (ID 1)
-  { id: 2, classeId: 1, classe: '6ème A', jour: 'Lundi', heure: '09:00-10:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
-  { id: 20, classeId: 1, classe: '6ème A', jour: 'Mardi', heure: '11:00-12:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
-  { id: 27, classeId: 1, classe: '6ème A', jour: 'Jeudi', heure: '16:00-17:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
-  { id: 60, classeId: 1, classe: '6ème A', jour: 'Mercredi', heure: '09:00-10:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
-  { id: 61, classeId: 1, classe: '6ème A', jour: 'Vendredi', heure: '08:00-09:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
-  { id: 62, classeId: 1, classe: '6ème A', jour: 'Samedi', heure: '10:00-11:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
+  { id: 2, classeId: 1, classe: '6ème A', jour: 'Lundi', heure: '09:00-10:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
+  { id: 20, classeId: 1, classe: '6ème A', jour: 'Mardi', heure: '11:00-12:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
+  { id: 27, classeId: 1, classe: '6ème A', jour: 'Jeudi', heure: '16:00-17:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
+  { id: 60, classeId: 1, classe: '6ème A', jour: 'Mercredi', heure: '09:00-10:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
+  { id: 61, classeId: 1, classe: '6ème A', jour: 'Vendredi', heure: '08:00-09:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
+  { id: 62, classeId: 1, classe: '6ème A', jour: 'Samedi', heure: '10:00-11:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 101' },
 
   // CM2 A (ID 3)
-  { id: 7, classeId: 3, classe: 'CM2 A', jour: 'Mardi', heure: '08:00-09:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 201' },
-  { id: 9, classeId: 3, classe: 'CM2 A', jour: 'Vendredi', heure: '14:00-15:00', matiere: 'Histoire', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 201' },
-  { id: 28, classeId: 3, classe: 'CM2 A', jour: 'Lundi', heure: '16:00-17:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 201' },
-  { id: 63, classeId: 3, classe: 'CM2 A', jour: 'Jeudi', heure: '09:00-10:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 201' },
+  { id: 7, classeId: 3, classe: 'CM2 A', jour: 'Mardi', heure: '08:00-09:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 201' },
+  { id: 9, classeId: 3, classe: 'CM2 A', jour: 'Vendredi', heure: '14:00-15:00', matiere: 'Histoire', matiereId: 4, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 201' },
+  { id: 28, classeId: 3, classe: 'CM2 A', jour: 'Lundi', heure: '16:00-17:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 201' },
+  { id: 63, classeId: 3, classe: 'CM2 A', jour: 'Jeudi', heure: '09:00-10:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 201' },
 
   // Tle S2-A (ID 4)
-  { id: 8, classeId: 4, classe: 'Tle S2-A', jour: 'Jeudi', heure: '10:00-11:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 301' },
-  { id: 29, classeId: 4, classe: 'Tle S2-A', jour: 'Mardi', heure: '08:00-09:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 301' },
-  { id: 64, classeId: 4, classe: 'Tle S2-A', jour: 'Lundi', heure: '14:00-15:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 301' },
+  { id: 8, classeId: 4, classe: 'Tle S2-A', jour: 'Jeudi', heure: '10:00-11:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 301' },
+  { id: 29, classeId: 4, classe: 'Tle S2-A', jour: 'Mardi', heure: '08:00-09:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 301' },
+  { id: 64, classeId: 4, classe: 'Tle S2-A', jour: 'Lundi', heure: '14:00-15:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 301' },
 
   // 3ème B (ID 6)
-  { id: 30, classeId: 6, jour: 'Lundi', heure: '15:00-16:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 203' },
-  { id: 65, classeId: 6, jour: 'Mercredi', heure: '10:00-11:00', matiere: 'Français', enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 203' },
+  { id: 30, classeId: 6, jour: 'Lundi', heure: '15:00-16:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 203' },
+  { id: 65, classeId: 6, jour: 'Mercredi', heure: '10:00-11:00', matiere: 'Français', matiereId: 2, enseignant: 'Khadija Ba', enseignantId: 6, salle: 'Salle 203' },
 
 
   // --- Cours de Pape Diouf (ID 7) - Histoire-Géographie ---
   // 6ème A (ID 1)
-  { id: 21, classeId: 1, classe: '6ème A', jour: 'Mardi', heure: '09:00-10:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 101' },
-  { id: 31, classeId: 1, classe: '6ème A', jour: 'Jeudi', heure: '10:00-11:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 101' },
-  { id: 66, classeId: 1, classe: '6ème A', jour: 'Lundi', heure: '10:00-11:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 101' },
+  { id: 21, classeId: 1, classe: '6ème A', jour: 'Mardi', heure: '09:00-10:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 101' },
+  { id: 31, classeId: 1, classe: '6ème A', jour: 'Jeudi', heure: '10:00-11:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 101' },
+  { id: 66, classeId: 1, classe: '6ème A', jour: 'Lundi', heure: '10:00-11:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 101' },
 
   // 5ème B (ID 2)
-  { id: 22, classeId: 2, classe: '5ème B', jour: 'Lundi', heure: '10:00-11:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 102' },
-  { id: 32, classeId: 2, classe: '5ème B', jour: 'Mercredi', heure: '14:00-15:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 102' },
-  { id: 67, classeId: 2, classe: '5ème B', jour: 'Vendredi', heure: '08:00-09:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 102' },
+  { id: 22, classeId: 2, classe: '5ème B', jour: 'Lundi', heure: '10:00-11:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 102' },
+  { id: 32, classeId: 2, classe: '5ème B', jour: 'Mercredi', heure: '14:00-15:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 102' },
+  { id: 67, classeId: 2, classe: '5ème B', jour: 'Vendredi', heure: '08:00-09:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 102' },
 
   // 3ème B (ID 6)
-  { id: 23, classeId: 6, jour: 'Jeudi', heure: '14:00-15:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 203' },
-  { id: 33, classeId: 6, jour: 'Mardi', heure: '10:00-11:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 203' },
-  { id: 68, classeId: 6, jour: 'Vendredi', heure: '11:00-12:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 203' },
+  { id: 23, classeId: 6, jour: 'Jeudi', heure: '14:00-15:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 203' },
+  { id: 33, classeId: 6, jour: 'Mardi', heure: '10:00-11:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 203' },
+  { id: 68, classeId: 6, jour: 'Vendredi', heure: '11:00-12:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 203' },
 
   // Tle S2-A (ID 4)
-  { id: 34, classeId: 4, classe: 'Tle S2-A', jour: 'Vendredi', heure: '08:00-09:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 301' },
-  { id: 69, classeId: 4, classe: 'Tle S2-A', jour: 'Mercredi', heure: '14:00-15:00', matiere: 'Histoire-Géographie', enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 301' },
+  { id: 34, classeId: 4, classe: 'Tle S2-A', jour: 'Vendredi', heure: '08:00-09:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 301' },
+  { id: 69, classeId: 4, classe: 'Tle S2-A', jour: 'Mercredi', heure: '14:00-15:00', matiere: 'Histoire-Géographie', matiereId: 4, enseignant: 'Pape Diouf', enseignantId: 7, salle: 'Salle 301' },
 
 
   // --- Cours de Awa Fall (ID 8) - Anglais ---
   // CM2 A (ID 3)
-  { id: 24, classeId: 3, classe: 'CM2 A', jour: 'Lundi', heure: '14:00-15:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 201' },
-  { id: 35, classeId: 3, classe: 'CM2 A', jour: 'Jeudi', heure: '11:00-12:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 201' },
-  { id: 70, classeId: 3, classe: 'CM2 A', jour: 'Mardi', heure: '16:00-17:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 201' },
+  { id: 24, classeId: 3, classe: 'CM2 A', jour: 'Lundi', heure: '14:00-15:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 201' },
+  { id: 35, classeId: 3, classe: 'CM2 A', jour: 'Jeudi', heure: '11:00-12:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 201' },
+  { id: 70, classeId: 3, classe: 'CM2 A', jour: 'Mardi', heure: '16:00-17:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 201' },
 
   // Tle S2-A (ID 4)
-  { id: 25, classeId: 4, classe: 'Tle S2-A', jour: 'Mardi', heure: '15:00-16:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 301' },
-  { id: 36, classeId: 4, classe: 'Tle S2-A', jour: 'Mercredi', heure: '09:00-10:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 301' },
-  { id: 71, classeId: 4, classe: 'Tle S2-A', jour: 'Lundi', heure: '08:00-09:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 301' },
+  { id: 25, classeId: 4, classe: 'Tle S2-A', jour: 'Mardi', heure: '15:00-16:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 301' },
+  { id: 36, classeId: 4, classe: 'Tle S2-A', jour: 'Mercredi', heure: '09:00-10:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 301' },
+  { id: 71, classeId: 4, classe: 'Tle S2-A', jour: 'Lundi', heure: '08:00-09:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 301' },
 
   // CE1 B (ID 7)
-  { id: 26, classeId: 7, classe: 'CE1 B', jour: 'Mercredi', heure: '09:00-10:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 105' },
-  { id: 37, classeId: 7, classe: 'CE1 B', jour: 'Vendredi', heure: '10:00-11:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 105' },
-  { id: 72, classeId: 7, classe: 'CE1 B', jour: 'Mardi', heure: '14:00-15:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 105' },
+  { id: 26, classeId: 7, classe: 'CE1 B', jour: 'Mercredi', heure: '09:00-10:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 105' },
+  { id: 37, classeId: 7, classe: 'CE1 B', jour: 'Vendredi', heure: '10:00-11:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 105' },
+  { id: 72, classeId: 7, classe: 'CE1 B', jour: 'Mardi', heure: '14:00-15:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 105' },
 
   // 2nde C (ID 5)
-  { id: 38, classeId: 5, classe: '2nde C', jour: 'Lundi', heure: '11:00-12:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 305' },
-  { id: 39, classeId: 5, classe: '2nde C', jour: 'Jeudi', heure: '15:00-16:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 305' },
-  { id: 73, classeId: 5, classe: '2nde C', jour: 'Mercredi', heure: '14:00-15:00', matiere: 'Anglais', enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 305' },
+  { id: 38, classeId: 5, classe: '2nde C', jour: 'Lundi', heure: '11:00-12:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 305' },
+  { id: 39, classeId: 5, classe: '2nde C', jour: 'Jeudi', heure: '15:00-16:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 305' },
+  { id: 73, classeId: 5, classe: '2nde C', jour: 'Mercredi', heure: '14:00-15:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Awa Fall', enseignantId: 8, salle: 'Salle 305' },
 
 
   // --- Cours de Moussa Sankhare (ID 14) - SVT/PC ---
   // 5ème B (ID 2) (SVT)
-  { id: 40, classeId: 2, classe: '5ème B', jour: 'Lundi', heure: '08:00-09:00', matiere: 'SVT', enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle Labo SVT' },
-  { id: 41, classeId: 2, classe: '5ème B', jour: 'Mercredi', heure: '11:00-12:00', matiere: 'SVT', enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle 102' },
-  { id: 74, classeId: 2, classe: '5ème B', jour: 'Vendredi', heure: '15:00-16:00', matiere: 'SVT', enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle 102' },
+  { id: 40, classeId: 2, classe: '5ème B', jour: 'Lundi', heure: '08:00-09:00', matiere: 'SVT', matiereId: 5, enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle Labo SVT' },
+  { id: 41, classeId: 2, classe: '5ème B', jour: 'Mercredi', heure: '11:00-12:00', matiere: 'SVT', matiereId: 5, enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle 102' },
+  { id: 74, classeId: 2, classe: '5ème B', jour: 'Vendredi', heure: '15:00-16:00', matiere: 'SVT', matiereId: 5, enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle 102' },
 
   // 2nde C (ID 5) (PC)
-  { id: 42, classeId: 5, classe: '2nde C', jour: 'Mardi', heure: '09:00-10:00', matiere: 'Physique-Chimie', enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle Labo PC' },
-  { id: 43, classeId: 5, classe: '2nde C', jour: 'Jeudi', heure: '11:00-12:00', matiere: 'Physique-Chimie', enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle 305' },
-  { id: 75, classeId: 5, classe: '2nde C', jour: 'Lundi', heure: '09:00-10:00', matiere: 'Physique-Chimie', enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle Labo PC' },
+  { id: 42, classeId: 5, classe: '2nde C', jour: 'Mardi', heure: '09:00-10:00', matiere: 'Physique-Chimie', matiereId: 6, enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle Labo PC' },
+  { id: 43, classeId: 5, classe: '2nde C', jour: 'Jeudi', heure: '11:00-12:00', matiere: 'Physique-Chimie', matiereId: 6, enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle 305' },
+  { id: 75, classeId: 5, classe: '2nde C', jour: 'Lundi', heure: '09:00-10:00', matiere: 'Physique-Chimie', matiereId: 6, enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle Labo PC' },
 
   // 3ème B (ID 6) (SVT)
-  { id: 44, classeId: 6, jour: 'Vendredi', heure: '08:00-09:00', matiere: 'SVT', enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle 203' },
-  { id: 76, classeId: 6, jour: 'Mardi', heure: '16:00-17:00', matiere: 'SVT', enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle 203' },
+  { id: 44, classeId: 6, jour: 'Vendredi', heure: '08:00-09:00', matiere: 'SVT', matiereId: 5, enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle 203' },
+  { id: 76, classeId: 6, jour: 'Mardi', heure: '16:00-17:00', matiere: 'SVT', matiereId: 5, enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle 203' },
 
 
   // --- Autres cours (non attribués à des profs spécifiques de la liste utilisateurs) ---
-  { id: 3, classeId: 1, classe: '6ème A', jour: 'Mardi', heure: '08:00-09:00', matiere: 'Anglais', enseignant: 'Fatou Diallo', enseignantId: null, salle: 'Salle 101' },
-  { id: 45, classeId: 1, classe: '6ème A', jour: 'Lundi', heure: '15:00-16:00', matiere: 'EPS', enseignant: 'Coach Amina', enseignantId: null, salle: 'Terrain Foot' },
-  { id: 46, classeId: 3, classe: 'CM2 A', jour: 'Jeudi', heure: '16:00-17:00', matiere: 'Musique', enseignant: 'M. Ly', enseignantId: null, salle: 'Salle Musique' },
-  { id: 47, classeId: 7, classe: 'CE1 B', jour: 'Lundi', heure: '08:00-09:00', matiere: 'Mathématiques', enseignant: 'M. Dia', enseignantId: null, salle: 'Salle 105' },
-  { id: 48, classeId: 7, classe: 'CE1 B', jour: 'Mardi', heure: '10:00-11:00', matiere: 'Lecture', enseignant: 'Mme Gaye', enseignantId: null, salle: 'Salle 105' },
-  { id: 49, classeId: 6, classe: '3ème B', jour: 'Mardi', heure: '08:00-09:00', matiere: 'Mathématiques', enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 203' },
-  { id: 50, classeId: 6, classe: '3ème B', jour: 'Mercredi', heure: '09:00-10:00', matiere: 'Arabe', enseignant: 'Imam Fall', enseignantId: null, salle: 'Salle Mosquée' },
-  { id: 51, classeId: 5, classe: '2nde C', jour: 'Vendredi', heure: '08:00-09:00', matiere: 'SVT', enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle Labo SVT' },
-  { id: 77, classeId: 1, classe: '6ème A', jour: 'Mercredi', heure: '14:00-15:00', matiere: 'Technologie', enseignant: 'M. Jean', enseignantId: null, salle: 'Salle Info' },
-  { id: 78, classeId: 2, classe: '5ème B', jour: 'Jeudi', heure: '15:00-16:00', matiere: 'Anglais', enseignant: 'Mme Ndiaye', enseignantId: null, salle: 'Salle 102' }
+  { id: 3, classeId: 1, classe: '6ème A', jour: 'Mardi', heure: '08:00-09:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Fatou Diallo', enseignantId: null, salle: 'Salle 101' },
+  { id: 45, classeId: 1, classe: '6ème A', jour: 'Lundi', heure: '15:00-16:00', matiere: 'EPS', matiereId: 7, enseignant: 'Coach Amina', enseignantId: null, salle: 'Terrain Foot' },
+  { id: 46, classeId: 3, classe: 'CM2 A', jour: 'Jeudi', heure: '16:00-17:00', matiere: 'Musique', matiereId: null, enseignant: 'M. Ly', enseignantId: null, salle: 'Salle Musique' }, // Matière non définie dans `matieres`
+  { id: 47, classeId: 7, classe: 'CE1 B', jour: 'Lundi', heure: '08:00-09:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'M. Dia', enseignantId: null, salle: 'Salle 105' },
+  { id: 48, classeId: 7, classe: 'CE1 B', jour: 'Mardi', heure: '10:00-11:00', matiere: 'Lecture', matiereId: 2, enseignant: 'Mme Gaye', enseignantId: null, salle: 'Salle 105' }, // Matière lecture, mais id français
+  { id: 49, classeId: 6, classe: '3ème B', jour: 'Mardi', heure: '08:00-09:00', matiere: 'Mathématiques', matiereId: 1, enseignant: 'Moussa Ndiaye', enseignantId: 2, salle: 'Salle 203' },
+  { id: 50, classeId: 6, classe: '3ème B', jour: 'Mercredi', heure: '09:00-10:00', matiere: 'Arabe', matiereId: 9, enseignant: 'Imam Fall', enseignantId: null, salle: 'Salle Mosquée' },
+  { id: 51, classeId: 5, classe: '2nde C', jour: 'Vendredi', heure: '08:00-09:00', matiere: 'SVT', matiereId: 5, enseignant: 'Moussa Sankhare', enseignantId: 14, salle: 'Salle Labo SVT' },
+  { id: 77, classeId: 1, classe: '6ème A', jour: 'Mercredi', heure: '14:00-15:00', matiere: 'Technologie', matiereId: null, enseignant: 'M. Jean', enseignantId: null, salle: 'Salle Info' }, // Matière non définie dans `matieres`
+  { id: 78, classeId: 2, classe: '5ème B', jour: 'Jeudi', heure: '15:00-16:00', matiere: 'Anglais', matiereId: 3, enseignant: 'Mme Ndiaye', enseignantId: null, salle: 'Salle 102' }
 ];
 
 export const paiements = [
@@ -254,6 +254,20 @@ export const documents = [
   { id: 7, titre: 'Résumé Histoire 3ème', type: 'cours', matiere: 'Histoire-Géographie', classe: '3ème B', enseignantId: 7, dateAjout: '2024-03-10', taille: '2.1 MB', format: 'PDF' },
   { id: 8, titre: 'Exercices d\'Anglais 2nde', type: 'exercices', matiere: 'Anglais', classe: '2nde C', enseignantId: 8, dateAjout: '2024-02-14', taille: '1.5 MB', format: 'DOCX' }
 ];
+
+// NOUVEAU TABLEAU POUR LES PRÉSENCES
+export const presences = [
+  // Exemples de données de présence
+  // Date: 2024-06-23 (aujourd'hui)
+  { id: 1, eleveId: 101, classeId: 1, matiereId: 1, enseignantId: 2, date: '2024-06-23', heureCours: '08:00-09:00', type: 'Présent', justifie: false, raison: '', createdAt: '2024-06-23T08:05:00Z', heureArrivee: '' },
+  { id: 2, eleveId: 101, classeId: 1, matiereId: 2, enseignantId: 6, date: '2024-06-23', heureCours: '09:00-10:00', type: 'Absent', justifie: false, raison: 'Malade', createdAt: '2024-06-23T09:10:00Z', heureArrivee: '' },
+  { id: 3, eleveId: 112, classeId: 1, matiereId: 1, enseignantId: 2, date: '2024-06-23', heureCours: '08:00-09:00', type: 'Retard', justifie: true, raison: 'Problème de transport', createdAt: '2024-06-23T08:20:00Z', heureArrivee: '08:15' },
+  { id: 4, eleveId: 103, classeId: 2, matiereId: 1, enseignantId: 2, date: '2024-06-23', heureCours: '08:00-09:00', type: 'Présent', justifie: false, raison: '', createdAt: '2024-06-23T08:05:00Z', heureArrivee: '' },
+  { id: 5, eleveId: 104, classeId: 4, matiereId: 2, enseignantId: 6, date: '2024-06-23', heureCours: '08:00-09:00', type: 'Renvoyé', justifie: false, raison: 'Mauvaise conduite', createdAt: '2024-06-23T08:30:00Z', heureArrivee: '' },
+  { id: 6, eleveId: 101, classeId: 1, matiereId: 1, enseignantId: 2, date: '2024-06-22', heureCours: '08:00-09:00', type: 'Présent', justifie: false, raison: '', createdAt: '2024-06-22T08:05:00Z', heureArrivee: '' },
+  { id: 7, eleveId: 101, classeId: 1, matiereId: 2, enseignantId: 6, date: '2024-06-22', heureCours: '09:00-10:00', type: 'Présent', justifie: false, raison: '', createdAt: '2024-06-22T09:10:00Z', heureArrivee: '' },
+];
+
 
 export const statistiques = {
   nombreEleves: 93,
@@ -298,7 +312,6 @@ export const authentifier = (email, motDePasse) => {
             Object.assign(utilisateurEnrichi, {
                 matiere: enseignantData.matiere,
                 classesIds: enseignantData.classesIds,
-                // Assurez-vous que l'enseignant aura ses propres IDs (non partagés avec les élèves/parents)
                 // Son ID utilisateur est déjà l'ID de l'enseignant.
             });
         }
@@ -323,6 +336,7 @@ export const obtenirDonneesParRole = (role, utilisateurId) => {
     paiements, // Tous les paiements
     notifications, // Toutes les notifications
     documents, // Tous les documents
+    presences, // NOUVEAU: Toutes les données de présence
     statistiques // Toutes les statistiques
   };
 

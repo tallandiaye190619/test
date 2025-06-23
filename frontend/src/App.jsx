@@ -6,6 +6,7 @@ import ClassesPage from './Pages/administrateur/ClassesPages';
 import ElevesPage from './Pages/administrateur/ElevesPage';
 import EmploisDuTempsPage from './Pages/administrateur/EmploidetempsPage';
 import EnseignantPage from './Pages/administrateur/EnseignatPage';
+import GestionPresencesAdmin from './Pages/administrateur/GestionPrences';
 import GestionUtilisateurs from './Pages/administrateur/GestionUtilisateurs';
 import ImportElevesPage from './Pages/administrateur/ImportElevesPage';
 import MatieresPage from './Pages/administrateur/MatieresPage';
@@ -18,16 +19,19 @@ import StatistiquesFinancieres from './Pages/comptable/Statistiques';
 import DocumentsEleve from './Pages/eleve/DocumentsEleve';
 import EmploiDuTemps from './Pages/eleve/EmploiDuTemps';
 import HistoriquePaiementsEleve from './Pages/eleve/HistoriquesPaiementsEleve';
+import MesAbsences from './Pages/eleve/MesAbscences';
 import MesNotes from './Pages/eleve/MesNotes';
 import NotificationsEleve from './Pages/eleve/NotificationsEleve';
 import Documents from './Pages/enseignant/Documents';
 import GestionNotes from './Pages/enseignant/GestionNotes';
+import GestionPresences from './Pages/enseignant/GestionPresences';
 import MesClasses from './Pages/enseignant/MesClasses';
 import MonEmploiDuTemps from './Pages/enseignant/MonEmploiDuTemps';
 import NotificationsEnseignant from './Pages/enseignant/NotificationsEnseignant';
 import HistoriquePaiementsParents from './Pages/parent/HistoriquePaiementsParent';
 import MesEnfants from './Pages/parent/Mesenfants';
 import NotificationsParents from './Pages/parent/NotificationsParents';
+import SuiviAbsencesEnfant from './Pages/parent/SuivisAbsences';
 import SuiviScolaireEnfant from './Pages/parent/SuiviScolaire';
 import TableauDeBord from './Pages/TableuDeBord';
 
@@ -88,6 +92,7 @@ const AppRoutes = () => {
         <Route path="/admin/notifications" element={<Notifications />} />
         <Route path="/admin/import-eleves" element={<ImportElevesPage />} />
         <Route path="/admin/gestion-utilisateurs" element={<GestionUtilisateurs />} />
+        <Route path="/admin/gestion-presences" element={<GestionPresencesAdmin />} /> {/* NOUVELLE ROUTE */}
         
         {/* Routes Enseignant */}
         <Route path="/enseignant/tableau-de-bord" element={<TableauDeBord />} />
@@ -96,6 +101,7 @@ const AppRoutes = () => {
         <Route path="/enseignant/gestion-notes" element={<GestionNotes />} />
         <Route path="/enseignant/documents" element={<Documents />} />
         <Route path="/enseignant/notifications" element={<NotificationsEnseignant />} />
+        <Route path="/enseignant/gestion-presences" element={<GestionPresences />} />
 
         {/* Routes Élève */}
         <Route path="/eleve/tableau-de-bord" element={<TableauDeBord />} />
@@ -104,6 +110,7 @@ const AppRoutes = () => {
         <Route path="/eleve/documents" element={<DocumentsEleve />} />
         <Route path="/eleve/paiements" element={<HistoriquePaiementsEleve />} />
         <Route path="/eleve/notifications" element={<NotificationsEleve />} />
+        <Route path="/eleve/absences-retards" element={<MesAbsences />} />
 
         {/* Routes Parent */}
         <Route path="/parent/tableau-de-bord" element={<TableauDeBord />} />
@@ -111,6 +118,7 @@ const AppRoutes = () => {
         <Route path="/parent/suivi-scolaire" element={<SuiviScolaireEnfant />} />
         <Route path="/parent/paiements" element={<HistoriquePaiementsParents />} />
         <Route path="/parent/notifications" element={<NotificationsParents />} />
+        <Route path="/parent/absences-retards" element={<SuiviAbsencesEnfant />} />
 
 
         {/* Routes Comptable */}

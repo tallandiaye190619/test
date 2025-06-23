@@ -12,8 +12,9 @@ import {
   School,
   Settings2,
   Upload,
-  Users,
-  X
+  UserCheck,
+  Users, // Import de l'icône pour la gestion des présences
+  X,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -45,6 +46,7 @@ const Layout = ({ children }) => {
         { nom: 'Paiements', chemin: '/admin/paiements', icone: DollarSign },
         { nom: 'Notifications', chemin: '/admin/notifications', icone: Bell },
         { nom: 'Import Élèves', chemin: '/admin/import-eleves', icone: Upload },
+        { nom: 'Gestion Présences', chemin: '/admin/gestion-presences', icone: UserCheck }, // NOUVEAU LIEN ADMIN
         //{ nom: 'Gestion Utilisateurs', chemin: '/admin/gestion-utilisateurs', icone: Users2 } 
 
       ],
@@ -53,6 +55,7 @@ const Layout = ({ children }) => {
         { nom: 'Mon Emploi-du-temps', chemin: '/enseignant/emploi-du-temps', icone: Calendar },
         { nom: 'Mes Classes', chemin: '/enseignant/mes-classes', icone: Users },
         { nom: 'Gestion Notes', chemin: '/enseignant/gestion-notes', icone: ClipboardList },
+        { nom: 'Gestion Présences', chemin: '/enseignant/gestion-presences', icone: UserCheck },
         { nom: 'Documents', chemin: '/enseignant/documents', icone: FileText },
         { nom: 'Notifications', chemin: '/enseignant/notifications', icone: Bell }
       ],
@@ -61,15 +64,19 @@ const Layout = ({ children }) => {
         { nom: 'Mes Notes', chemin: '/eleve/mes-notes', icone: FileText },
         { nom: 'Emploi du temps', chemin: '/eleve/emploi-du-temps', icone: Calendar },
         { nom: 'Documents', chemin: '/eleve/documents', icone: BookOpen },
+        {nom: 'Absences & retards', chemin: '/eleve/absences-retards', icone: UserCheck},
         { nom: 'Paiements', chemin: '/eleve/paiements', icone: DollarSign },
-        { nom: 'Notifications', chemin: '/eleve/notifications', icone: Bell }
+        { nom: 'Notifications', chemin: '/eleve/notifications', icone: Bell },
+        
       ],
-      parent: [
+      parent: [ 
         ...menusCommuns,
         { nom: 'Mes Enfants', chemin: '/parent/mes-enfants', icone: Users },
         { nom: 'Suivi Scolaire', chemin: '/parent/suivi-scolaire', icone: FileText },
+        {nom: 'Absences & retards', chemin: '/parent/absences-retards', icone: UserCheck},
         { nom: 'Paiements', chemin: '/parent/paiements', icone: DollarSign },
-        { nom: 'Notifications', chemin: '/parent/notifications', icone: Bell }
+        { nom: 'Notifications', chemin: '/parent/notifications', icone: Bell },
+        
       ],
       comptable: [
         ...menusCommuns,
