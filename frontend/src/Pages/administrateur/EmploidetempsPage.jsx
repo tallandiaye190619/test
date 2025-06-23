@@ -32,7 +32,7 @@ const EmploisDuTempsPage = () => { // Renommé EmploisDuTempsPage pour la cohér
 
   // LOGIQUE MODIFIÉE: L'emploi du temps filtré est vide si "Toutes les classes" est sélectionné
   const emploiFiltré = classeSelectionnee
-    ? emploisDuTemps.filter(cours => String(cours.classId) === String(classeSelectionnee))
+    ? emploisDuTemps.filter(cours => String(cours.classeId) === String(classeSelectionnee))
     : []; // Si aucune classe sélectionnée, le tableau est vide
 
   const obtenirCours = (jour, heure) => {
@@ -40,10 +40,10 @@ const EmploisDuTempsPage = () => { // Renommé EmploisDuTempsPage pour la cohér
   };
 
   const ouvrirModal = (type, cours = null) => {
-    // Si ajout, pré-remplir la classId et le nom de la classe
+    // Si ajout, pré-remplir la classeId et le nom de la classe
     if (type === 'ajouter' && classeSelectionnee) {
         const classeObj = classes.find(c => c.id === parseInt(classeSelectionnee));
-        setCours({ ...cours, classId: parseInt(classeSelectionnee), classe: classeObj?.nom });
+        setCours({ ...cours, classeId: parseInt(classeSelectionnee), classe: classeObj?.nom });
     } else {
         setCours(cours);
     }
@@ -59,7 +59,7 @@ const EmploisDuTempsPage = () => { // Renommé EmploisDuTempsPage pour la cohér
 
   const FormulaireCours = () => {
     const [formData, setFormData] = useState(coursSelectionne || {
-      classId: '', // Stocke l'ID
+      classeId: '', // Stocke l'ID
       jour: '',
       heure: '',
       matiere: '', // Nom de la matière
@@ -70,7 +70,7 @@ const EmploisDuTempsPage = () => { // Renommé EmploisDuTempsPage pour la cohér
     const gererSoumission = (e) => {
       e.preventDefault();
       console.log('Données cours:', formData);
-      // Ici, la logique d'ajout/modification utiliserait formData.classId
+      // Ici, la logique d'ajout/modification utiliserait formData.classeId
       fermerModal();
     };
 
@@ -82,8 +82,8 @@ const EmploisDuTempsPage = () => { // Renommé EmploisDuTempsPage pour la cohér
               Classe *
             </label>
             <select
-              value={formData.classId} // Utilise classId ici
-              onChange={(e) => setFormData({...formData, classId: parseInt(e.target.value)})}
+              value={formData.classeId} // Utilise classeId ici
+              onChange={(e) => setFormData({...formData, classeId: parseInt(e.target.value)})}
               className="input-field"
               required
             >
@@ -186,8 +186,8 @@ const EmploisDuTempsPage = () => { // Renommé EmploisDuTempsPage pour la cohér
   };
 
   // Fonction utilitaire pour obtenir le nom de la classe à partir de son ID
-  const getClassNameById = (classId) => {
-      return classes.find(c => c.id === classId)?.nom || 'Classe inconnue';
+  const getClassNameById = (classeId) => {
+      return classes.find(c => c.id === classeId)?.nom || 'Classe inconnue';
   };
 
   return (
@@ -266,7 +266,7 @@ const EmploisDuTempsPage = () => { // Renommé EmploisDuTempsPage pour la cohér
                           </div>
                         ) : (
                           <button
-                            onClick={() => ouvrirModal('ajouter', { jour, heure, classId: parseInt(classeSelectionnee) })} // Passe classId au lieu de classe nom
+                            onClick={() => ouvrirModal('ajouter', { jour, heure, classeId: parseInt(classeSelectionnee) })} // Passe classeId au lieu de classe nom
                             className="w-full h-16 border-2 border-dashed border-gray-300 rounded-lg hover:border-fleuve-400 hover:bg-fleuve-50 transition-colors duration-200 flex items-center justify-center"
                           >
                             <Plus className="h-4 w-4 text-gray-400" />
@@ -314,7 +314,7 @@ const EmploisDuTempsPage = () => { // Renommé EmploisDuTempsPage pour la cohér
                   <div className="text-center bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-inner">
                     <BookOpen className="h-12 w-12 text-fleuve-600 mx-auto mb-4" />
                     <h4 className="text-2xl font-bold text-gray-900">{coursSelectionne?.matiere}</h4>
-                    <p className="text-gray-600">{getClassNameById(coursSelectionne?.classId)}</p> {/* Affiche le nom de la classe */}
+                    <p className="text-gray-600">{getClassNameById(coursSelectionne?.classeId)}</p> {/* Affiche le nom de la classe */}
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">

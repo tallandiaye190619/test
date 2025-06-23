@@ -6,6 +6,7 @@ import {
   ,
 
 
+
   BookOpen,
   Calendar,
   CheckCircle,
@@ -119,7 +120,7 @@ const TableauDeBord = () => {
         return [
           {
             titre: 'Ma Classe',
-            valeur: utilisateur?.classId || 'N/A',
+            valeur: utilisateur?.classe || 'N/A',
             icone: BookOpen,
             couleurBg: 'bg-fleuve-500',
             couleurText: 'text-fleuve-900',
