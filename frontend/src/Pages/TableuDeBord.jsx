@@ -4,6 +4,8 @@ import {
   ArrowRightCircle, // Pour les boutons de navigation du slider
   Bell // Pour les notifications
   ,
+
+
   BookOpen,
   Calendar,
   CheckCircle,
@@ -110,13 +112,14 @@ const TableauDeBord = () => {
           }
         ];
       case 'eleve':
+        const classeEleve = donnees.classes.filter(c => c.id === utilisateur?.classId) || N/A
         const notesEleve = donnees.notes?.filter(n => n.eleveId === utilisateur?.id).length || 0;
         const documentsEleve = donnees.documents?.filter(d => d.classe === utilisateur?.classe).length || 0;
         const notificationsNonLuesEleve = donnees.notifications?.filter(n => !n.lue && n.destinataires.includes('eleve')).length || 0;
         return [
           {
             titre: 'Ma Classe',
-            valeur: utilisateur?.classe || 'N/A',
+            valeur: utilisateur?.classId || 'N/A',
             icone: BookOpen,
             couleurBg: 'bg-fleuve-500',
             couleurText: 'text-fleuve-900',

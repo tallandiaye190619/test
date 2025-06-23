@@ -31,7 +31,7 @@ export const utilisateurs = [
     motDePasse: 'parent123',
     role: 'parent',
     telephone: '77 345 67 89',
-    enfants: [1, 2], // Ibrahima Sarr (ID 1), Aissatou Sarr (ID 2)
+    enfants: [1111, 2], // Ibrahima Sarr (ID 1), Aissatou Sarr (ID 2)
     photo: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1'
   },
   {
@@ -244,11 +244,9 @@ export const matieres = [
 
 export const notes = [
   // Notes pour Ibrahima Sarr (ID 1) - 6ème A
-  { id: 1, eleveId: 1, matiereId: 1, enseignantId: 2, trimestre: 1, valeur: 15, coefficient: 4, type: 'Devoir', date: '2024-01-15' },
-  { id: 2, eleveId: 1, matiereId: 2, enseignantId: 7, trimestre: 1, valeur: 12, coefficient: 4, type: 'Composition', date: '2024-01-20' },
-  { id: 9, eleveId: 1, matiereId: 1, enseignantId: 2, trimestre: 2, valeur: 16.5, coefficient: 4, type: 'Composition', date: '2024-04-10' },
-  { id: 10, eleveId: 1, matiereId: 3, enseignantId: 10, trimestre: 2, valeur: 14, coefficient: 3, type: 'Oral', date: '2024-04-15' },
-  { id: 11, eleveId: 1, matiereId: 4, enseignantId: 9, trimestre: 2, valeur: 10.5, coefficient: 3, type: 'Devoir', date: '2024-04-20' },
+  { id: 1, eleveId: 1111, matiereId: 1, enseignantId: 2, trimestre: 1, valeur: 15, coefficient: 4, type: 'Devoir', date: '2024-01-15' },
+  { id: 2, eleveId: 1111, matiereId: 2, enseignantId: 7, trimestre: 1, valeur: 12, coefficient: 4, type: 'Composition', date: '2024-01-20' },
+  
   // Notes pour Aissatou Sarr (ID 2) - CM2 A
   { id: 3, eleveId: 2, matiereId: 1, enseignantId: 2, trimestre: 1, valeur: 18, coefficient: 4, type: 'Devoir', date: '2024-01-15' },
   { id: 14, eleveId: 2, matiereId: 2, enseignantId: 7, trimestre: 1, valeur: 17, coefficient: 4, type: 'Composition', date: '2024-01-22' },
@@ -291,7 +289,7 @@ export const emploisDuTemps = [
 export const paiements = [
   {
     id: 1,
-    eleveId: 1,
+    eleveId: 1111,
     montant: 50000,
     datePayment: '2024-01-15',
     typePaiement: 'Scolarité',
@@ -368,7 +366,7 @@ export const paiements = [
   },
   {
     id: 8,
-    eleveId: 10, // Khadija Diouf
+    eleveId: 11110, // Khadija Diouf
     montant: 55000,
     datePayment: '2023-09-10',
     typePaiement: 'Scolarité',
@@ -390,7 +388,7 @@ export const paiements = [
   },
   {
     id: 10,
-    eleveId: 11, // Ousmane Traore
+    eleveId: 11111, // Ousmane Traore
     montant: 60000,
     datePayment: '2023-09-15',
     typePaiement: 'Scolarité',
@@ -401,7 +399,7 @@ export const paiements = [
   },
   {
     id: 11,
-    eleveId: 12, // Mariam Cisse
+    eleveId: 11112, // Mariam Cisse
     montant: 50000,
     datePayment: '2023-09-20',
     typePaiement: 'Scolarité',
@@ -412,7 +410,7 @@ export const paiements = [
   },
   {
     id: 12,
-    eleveId: 13, // Cheikh Ba
+    eleveId: 11113, // Cheikh Ba
     montant: 70000,
     datePayment: '2023-09-25',
     typePaiement: 'Scolarité',
@@ -583,18 +581,42 @@ export const statistiques = {
 export const authentifier = (email, motDePasse) => {
   const utilisateur = utilisateurs.find(u => u.email === email && u.motDePasse === motDePasse);
   if (utilisateur) {
-    return {
-      succes: true,
-      utilisateur: {
-        id: utilisateur.id,
-        nom: utilisateur.nom,
-        prenom: utilisateur.prenom,
-        email: utilisateur.email,
-        role: utilisateur.role,
-        telephone: utilisateur.telephone,
-        photo: utilisateur.photo
-      }
-    };
+    // Cloner l'objet utilisateur pour ne pas modifier directement l'original du tableau `utilisateurs`
+    const utilisateurEnrichi = { ...utilisateur }; 
+
+    // Si l'utilisateur est un élève, trouver ses informations complètes
+    if (utilisateur.role === 'eleve') {
+        const eleveData = eleves.find(e => e.id === utilisateur.id);
+        if (eleveData) { // S'assurer que les données de l'élève sont trouvées
+            // Fusionne les propriétés spécifiques de l'élève
+            Object.assign(utilisateurEnrichi, eleveData); 
+        } else {
+            console.warn(`Aucune donnée d'élève trouvée pour l'utilisateur ID: ${utilisateur.id}`);
+            return { succes: false, message: 'Profil élève introuvable.' };
+        }
+    }
+    // Si l'utilisateur est un parent, enrichir avec les détails complets de leurs enfants
+    else if (utilisateur.role === 'parent') { // Utilisez 'else if' pour les rôles exclusifs
+        const enfantsIds = utilisateur.enfants || [];
+        const enfantsDetails = eleves.filter(e => enfantsIds.includes(e.id));
+        utilisateurEnrichi.enfants = enfantsDetails; // Remplace les IDs par les objets complets
+    }
+    // Si l'utilisateur est un enseignant, enrichir avec les détails de leurs classes enseignées
+    else if (utilisateur.role === 'enseignant') {
+        const enseignantData = enseignants.find(e => e.id === utilisateur.id);
+        if (enseignantData) {
+            Object.assign(utilisateurEnrichi, {
+                matiere: enseignantData.matiere,
+                classesIds: enseignantData.classesIds,
+                // Assurez-vous que l'enseignant aura ses propres IDs (non partagés avec les élèves/parents)
+                // Son ID utilisateur est déjà l'ID de l'enseignant.
+            });
+        }
+    }
+    // Pour les autres rôles (admin, comptable), l'objet `utilisateurEnrichi` est déjà cloné
+    // et contient les propriétés de base de `utilisateurs`.
+
+    return { succes: true, utilisateur: utilisateurEnrichi };
   }
   return { succes: false, message: 'Email ou mot de passe incorrect' };
 };
@@ -602,35 +624,19 @@ export const authentifier = (email, motDePasse) => {
 // Fonction pour obtenir les données selon le rôle (plus englobante)
 export const obtenirDonneesParRole = (role, utilisateurId) => {
   const donneesCommunes = {
-    eleves,
-    enseignants,
-    classes,
-    matieres,
-    notes,
-    emploisDuTemps,
-    paiements,
-    notifications,
-    documents,
-    statistiques
+    eleves, // Tous les élèves
+    enseignants, // Tous les enseignants
+    classes, // Toutes les classes
+    matieres, // Toutes les matières
+    notes, // Toutes les notes
+    emploisDuTemps, // Tous les emplois du temps
+    paiements, // Tous les paiements
+    notifications, // Toutes les notifications
+    documents, // Tous les documents
+    statistiques // Toutes les statistiques
   };
 
-  // Chaque rôle reçoit un ensemble de données complet,
-  // les composants de page se chargeront de filtrer si nécessaire.
-  switch (role) {
-    case 'administrateur':
-      return donneesCommunes;
-    case 'enseignant':
-      const enseignant = enseignants.find(e => e.id === utilisateurId);
-      return { ...donneesCommunes, utilisateurEnseignant: enseignant };
-    case 'eleve':
-      const eleve = eleves.find(e => e.id === utilisateurId);
-      return { ...donneesCommunes, profil: eleve };
-    case 'parent':
-      const parent = utilisateurs.find(u => u.id === utilisateurId);
-      return { ...donneesCommunes, profil: parent };
-    case 'comptable':
-      return donneesCommunes;
-    default:
-      return {};
-  }
+  // Les composants de page se chargeront de filtrer les données spécifiques
+  // au rôle ou à l'utilisateur connecté à partir de ces données communes.
+  return donneesCommunes;
 };
