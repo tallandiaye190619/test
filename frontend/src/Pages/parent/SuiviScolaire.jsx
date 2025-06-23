@@ -6,7 +6,6 @@ import {
     CreditCard,
     DollarSign,
     Download,
-    Eye,
     FileText,
     GraduationCap,
     Search,
@@ -192,7 +191,7 @@ const SuiviScolaireEnfant = () => {
                                         <ul className="list-disc list-inside text-sm text-gray-700 mt-2">
                                             {matiere.notesDetail.map(note => (
                                                 <li key={note.id} className="flex justify-between items-center py-1">
-                                                    <span>{note.type} (Coef. {note.coefficient}):</span>
+                                                    <span>{toutesLesMatieres.find(m => m.id === note.matiereId)?.nom}:</span>
                                                     <span className={`font-semibold ${obtenirMention(note.valeur).couleur}`}>{note.valeur}/20</span>
                                                 </li>
                                             ))}
@@ -350,9 +349,7 @@ const SuiviScolaireEnfant = () => {
                                         </div>
                                     </div>
                                     <div className="flex space-x-2">
-                                        <button onClick={() => console.log('Aperçu doc:', doc.id)} className="p-2 rounded-full text-fleuve-600 hover:bg-fleuve-50 transition-colors" title="Aperçu">
-                                            <Eye className="h-4 w-4" />
-                                        </button>
+                                        
                                         <button onClick={() => console.log('Télécharger doc:', doc.id)} className="p-2 rounded-full text-acacia-600 hover:bg-acacia-50 transition-colors" title="Télécharger">
                                             <Download className="h-4 w-4" />
                                         </button>
@@ -489,19 +486,19 @@ const SuiviScolaireEnfant = () => {
                 {/* Boutons d'action rapides (ouvrir les modals ici) */}
                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 border-t pt-4 border-gray-200">
                   <button
-                    onClick={() => console.log('Aller aux notes de:', enfant.id)} // Garde les logs ou mettez des navigations réelles
+                    onClick={() => openNotesModal(enfant)} // Call openNotesModal
                     className="btn-primary flex items-center justify-center shadow-md hover:shadow-lg flex-1 py-2.5"
                   >
                     <FileText className="h-4 w-4 mr-2" /> Notes détaillées
                   </button>
                   <button
-                    onClick={() => console.log('Aller aux paiements de:', enfant.id)}
+                    onClick={() => openPaiementsModal(enfant)} // Call openPaiementsModal
                     className="btn-secondary flex items-center justify-center shadow-sm hover:shadow-md flex-1 py-2.5"
                   >
                     <DollarSign className="h-4 w-4 mr-2" /> Paiements
                   </button>
                   <button
-                    onClick={() => console.log('Aller aux documents de:', enfant.id)}
+                    onClick={() => openDocumentsModal(enfant)} // Call openDocumentsModal
                     className="btn-secondary flex items-center justify-center shadow-sm hover:shadow-md flex-1 py-2.5"
                   >
                     <BookOpen className="h-4 w-4 mr-2" /> Documents

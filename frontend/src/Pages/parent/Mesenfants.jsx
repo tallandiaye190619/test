@@ -1,9 +1,7 @@
 import {
   BookOpen,
   Calendar,
-  DollarSign,
   Eye,
-  FileText,
   GraduationCap,
   Mail,
   MapPin,
@@ -288,20 +286,7 @@ const MesEnfants = () => {
                   <BookOpen className="h-4 w-4 mr-2" />
                   Emploi du temps
                 </button>
-                <button
-                  onClick={() => console.log('Aller aux notes de:', enfant.id)} // Garde les logs ou mettez des navigations réelles
-                  className="btn-secondary flex items-center justify-center shadow-sm hover:shadow-md py-2.5 px-4"
-                >
-                  <FileText className="h-4 w-4 mr-2" />
-                  Voir les notes
-                </button>
-                <button
-                  onClick={() => console.log('Aller aux paiements de:', enfant.id)}
-                  className="btn-secondary flex items-center justify-center shadow-sm hover:shadow-md py-2.5 px-4"
-                >
-                  <DollarSign className="h-4 w-4 mr-2" />
-                  Historique de paiements
-                </button>
+               
                 <button
                   onClick={() => openProfilModal(enfant)}
                   className="btn-primary flex items-center justify-center shadow-md hover:shadow-lg py-2.5 px-4"

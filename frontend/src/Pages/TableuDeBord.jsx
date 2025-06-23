@@ -7,6 +7,7 @@ import {
 
 
 
+
   BookOpen,
   Calendar,
   CheckCircle,
@@ -152,7 +153,7 @@ const TableauDeBord = () => {
           }
         ];
       case 'parent':
-        const enfantsP = donnees.enfants || [];
+        const enfantsP = utilisateur.enfants || [];
         const paiementsPayesParents = donnees.paiements?.filter(p => p.statut === 'payé' && enfantsP.some(e => e.id === p.eleveId)).length || 0;
         const paiementsEnAttenteParents = donnees.paiements?.filter(p => p.statut === 'en_attente' && enfantsP.some(e => e.id === p.eleveId)).length || 0;
         const notificationsNonLuesParent = donnees.notifications?.filter(n => !n.lue && n.destinataires.includes('parent')).length || 0;

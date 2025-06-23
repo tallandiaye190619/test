@@ -9,6 +9,7 @@ import {
   Info // Pour icône d'info dans le modal
   ,
 
+
   Search,
   X
 } from 'lucide-react';
@@ -25,18 +26,23 @@ const HistoriquePaiementsParents = () => {
   const [modalOuverte, setModalOuverte] = useState(false);
   const [paiementSelectionne, setPaiementSelectionne] = useState(null);
 
-  // Les paiements sont déjà filtrés pour les enfants du parent via obtenirDonneesParRole
-  const paiementsDesEnfants = donnees.paiements || [];
-  const mesEnfants = donnees.eleves || []; // Liste des objets enfants du parent
+  // Correction: mesEnfants doit être dérivé de utilisateur.enfants
+  const mesEnfants = utilisateur?.enfants || []; // Liste des objets enfants du parent
 
-  const paiementsFiltres = paiementsDesEnfants.filter(paiement => {
+  // Correction: Filtrer initialement tous les paiements pour n'inclure que ceux des enfants du parent
+  const tousLesPaiementsDuSysteme = donnees.paiements || [];
+  const paiementsDuParent = tousLesPaiementsDuSysteme.filter(paiement =>
+    mesEnfants.some(enfant => enfant.id === paiement.eleveId)
+  );
+
+  const paiementsFiltres = paiementsDuParent.filter(paiement => {
     const enfant = mesEnfants.find(e => e.id === paiement.eleveId); // Trouver l'enfant pour la recherche
     const correspondRecherche = enfant ?
       `${enfant.prenom} ${enfant.nom}`.toLowerCase().includes(rechercheTexte.toLowerCase()) ||
       paiement.numeroRecu?.toLowerCase().includes(rechercheTexte.toLowerCase()) : false;
 
     const correspondType = !filtreType || paiement.typePaiement === filtreType;
-    const correspondEnfant = !filtreEnfant || (enfant && enfant.id.toString() === filtreEnfant);
+    const correspondEnfant = !filtreEnfant || (enfant && String(enfant.id) === filtreEnfant); // Convertir en string pour comparaison avec select value
 
     let correspondPeriode = true;
     if (filtrePeriode) {
@@ -62,12 +68,15 @@ const HistoriquePaiementsParents = () => {
         case 'annee':
           correspondPeriode = datePaiement.getFullYear() === maintenant.getFullYear();
           break;
+        default: // If 'semaine', 'mois', 'trimestre', 'annee' not matched, or 'tout', then it should not filter by period.
+          correspondPeriode = true;
+          break;
       }
     }
     return correspondRecherche && correspondType && correspondEnfant && correspondPeriode;
   });
 
-  const typesPaiementUniques = [...new Set(paiementsDesEnfants.map(p => p.typePaiement))].sort();
+  const typesPaiementUniques = [...new Set(paiementsDuParent.map(p => p.typePaiement))].sort();
 
   const ouvrirModalDetails = (paiement) => {
     setPaiementSelectionne(paiement);
