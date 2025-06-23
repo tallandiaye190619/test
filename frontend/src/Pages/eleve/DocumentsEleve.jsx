@@ -4,8 +4,8 @@ import {
   ,
 
 
+
   Download,
-  Eye,
   FileText,
   Filter, // Pour les icônes de détails
   GraduationCap,
@@ -183,15 +183,12 @@ const DocumentsEleve = () => {
                 </div>
               </div>
 
-              <div className="flex space-x-2">
+              <div className="flex">
                 <button className="flex-1 btn-primary flex items-center justify-center text-sm shadow-sm hover:shadow-md py-2.5">
                   <Download className="h-4 w-4 mr-1" />
                   Télécharger
                 </button>
-                <button className="flex-1 btn-secondary flex items-center justify-center text-sm shadow-sm hover:shadow-md py-2.5">
-                  <Eye className="h-4 w-4 mr-1" />
-                  Aperçu
-                </button>
+                
               </div>
             </div>
           ))

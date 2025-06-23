@@ -16,6 +16,7 @@ import GestionPaiements from './Pages/comptable/GestionPaiements';
 import GestionRecus from './Pages/comptable/GestionRecus';
 import StatistiquesFinancieres from './Pages/comptable/Statistiques';
 import DocumentsEleve from './Pages/eleve/DocumentsEleve';
+import EmploiDuTemps from './Pages/eleve/EmploiDuTemps';
 import HistoriquePaiementsEleve from './Pages/eleve/HistoriquesPaiementsEleve';
 import MesNotes from './Pages/eleve/MesNotes';
 import NotificationsEleve from './Pages/eleve/NotificationsEleve';
@@ -99,7 +100,7 @@ const AppRoutes = () => {
         {/* Routes Élève */}
         <Route path="/eleve/tableau-de-bord" element={<TableauDeBord />} />
         <Route path="/eleve/mes-notes" element={<MesNotes />} />
-        <Route path="/eleve/emploi-du-temps" element={<MonEmploiDuTemps />} />
+        <Route path="/eleve/emploi-du-temps" element={<EmploiDuTemps />} />
         <Route path="/eleve/documents" element={<DocumentsEleve />} />
         <Route path="/eleve/paiements" element={<HistoriquePaiementsEleve />} />
         <Route path="/eleve/notifications" element={<NotificationsEleve />} />

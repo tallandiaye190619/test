@@ -16,8 +16,9 @@ const EmploiDuTemps = () => {
     if (!profilEleve || !profilEleve.classeId) {
         return [];
     }
+    // Fix: Ensure both classeId values are treated as strings for robust comparison
     return emploisDuTempsGlobaux.filter(cours => 
-        cours.classeId === profilEleve.classeId
+        String(cours.classeId) === String(profilEleve.classeId)
     );
   }, [emploisDuTempsGlobaux, profilEleve]);
 
@@ -47,8 +48,6 @@ const EmploiDuTemps = () => {
     const aujourd = new Date();
     return dateJour.toDateString() === aujourd.toDateString();
   };
-
-
 
   return (
     <div className="space-y-6">
@@ -110,7 +109,7 @@ const EmploiDuTemps = () => {
                                 estCelluleAujourdHui ? 'bg-fleuve-50' : ''
                                 }`}>
                                 {cours ? (
-                                    <div className="bg-white border border-fleuve-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                    <div className="bg-fleuve-100 border border-fleuve-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow duration-200">
                                     <div className="text-sm font-medium text-fleuve-900 mb-1">
                                         {cours.matiere}
                                     </div>
