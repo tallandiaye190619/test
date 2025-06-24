@@ -1,18 +1,21 @@
 import {
     AlertCircle,
-    CheckCircle, // Pour fermer le modal
-    Edit, // Pour les filtres
-    Eye, // Pour la recherche
-    Filter, // Renvoyé
-    Info, // Pour le total des présences
-    Save, // Pour supprimer
-    Search, // Pour modifier
-    Trash2, // Absent
-    UserCheck, // Présent
-    UserMinus, // Retard
-    UserPlus, // Pour les statistiques de renvoi
+    ArrowLeft, // Importation de l'icône de flèche gauche
+    ArrowRight // Importation de l'icône de flèche droite
+    ,
+
+
+    Edit,
+    Eye,
+    Filter,
+    Info,
+    Save,
+    Search,
+    Trash2,
+    UserCheck,
+    UserMinus,
     Users,
-    UserX, // Pour les détails du modal
+    UserX,
     X
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -28,9 +31,14 @@ const GestionPresencesAdmin = () => {
     const [dateDebut, setDateDebut] = useState('');
     const [dateFin, setDateFin] = useState('');
 
-    const [modalOuvert, setModalOuvert] = useState(false);
+    const [modalOuvert, setModalOuvert] = useState(false); // For view/edit presence modal
     const [presenceSelectionnee, setPresenceSelectionnee] = useState(null);
     const [typeModal, setTypeModal] = useState('voir'); // 'voir', 'modifier'
+
+    const [filterModalOpen, setFilterModalOpen] = useState(false);
+
+    // --- NEW: State for current slide ---
+    const [currentSlide, setCurrentSlide] = useState(0);
 
     const toutesLesPresences = donnees.presences || [];
     const eleves = donnees.eleves || [];
@@ -44,9 +52,14 @@ const GestionPresencesAdmin = () => {
             const enseignant = enseignants.find(e => e.id === presence.enseignantId);
             const matiere = matieres.find(m => m.id === presence.matiereId);
 
-            const correspondRecherche = eleve ?
-                `${eleve.prenom} ${eleve.nom} ${eleve.numeroMatricule} ${matiere?.nom || ''}`.toLowerCase().includes(rechercheTexte.toLowerCase())
-                : false;
+            const eleveName = eleve ? `${eleve.prenom} ${eleve.nom}`.toLowerCase() : '';
+            const matricule = eleve?.numeroMatricule?.toLowerCase() || '';
+            const matiereName = matiere?.nom?.toLowerCase() || '';
+
+            const correspondRecherche = rechercheTexte.toLowerCase() === '' ||
+                                        eleveName.includes(rechercheTexte.toLowerCase()) ||
+                                        matricule.includes(rechercheTexte.toLowerCase()) ||
+                                        matiereName.includes(rechercheTexte.toLowerCase());
 
             const correspondClasse = !filtreClasse || String(presence.classeId) === filtreClasse;
             const correspondEnseignant = !filtreEnseignant || String(presence.enseignantId) === filtreEnseignant;
@@ -60,8 +73,8 @@ const GestionPresencesAdmin = () => {
             const correspondDate = (!debut || datePresence >= debut) && (!fin || datePresence <= fin);
 
             return correspondRecherche && correspondClasse && correspondEnseignant && correspondType && correspondJustifie && correspondDate;
-        }).sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date décroissante
-    }, [toutesLesPresences, eleves, enseignants, matieres, classes, rechercheTexte, filtreClasse, filtreEnseignant, filtreType, filtreJustifie, dateDebut, dateFin]);
+        }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }, [toutesLesPresences, eleves, enseignants, matieres, rechercheTexte, filtreClasse, filtreEnseignant, filtreType, filtreJustifie, dateDebut, dateFin]);
 
     const calculerStatistiques = useMemo(() => {
         const total = presencesFiltrees.length;
@@ -86,9 +99,53 @@ const GestionPresencesAdmin = () => {
         };
     }, [presencesFiltrees]);
 
+    // Define the statistics cards data
+    const statsCards = [
+        {
+            icon: Users,
+            color: 'fleuve',
+            value: calculerStatistiques.total,
+            label: 'Enregistrements total'
+        },
+        {
+            icon: UserCheck,
+            color: 'acacia',
+            value: calculerStatistiques.presents,
+            label: 'Présences marquées'
+        },
+        {
+            icon: UserX,
+            color: 'terre',
+            value: calculerStatistiques.absents,
+            label: `Absences (${calculerStatistiques.absentsNonJustifies} non justifiées)`
+        },
+        {
+            icon: UserMinus,
+            color: 'soleil',
+            value: calculerStatistiques.retards,
+            label: 'Retards'
+        },
+        {
+            icon: AlertCircle,
+            color: 'red',
+            value: calculerStatistiques.renvoyes,
+            label: 'Renvoyés'
+        }
+    ];
+
+    // --- NEW: Navigation functions for slides ---
+    const goToNextSlide = () => {
+        setCurrentSlide((prevSlide) => (prevSlide + 1) % statsCards.length);
+    };
+
+    const goToPrevSlide = () => {
+        setCurrentSlide((prevSlide) => (prevSlide - 1 + statsCards.length) % statsCards.length);
+    };
+
+
     const ouvrirModal = (type, presence = null) => {
-        setTypeModal(type);
         setPresenceSelectionnee(presence);
+        setTypeModal(type);
         setModalOuvert(true);
     };
 
@@ -100,18 +157,17 @@ const GestionPresencesAdmin = () => {
 
     const handleModifierPresence = (id, updatedData) => {
         console.log(`Modification de la présence ID ${id}:`, updatedData);
-        // Ici, implémenter la logique de mise à jour dans votre source de données (API ou `donneesTemporaires`)
-        // Pour l'exemple, nous allons juste fermer le modal
+        // Implement logic to update presence in your data source (API or state)
+        // donnees.setPresences(prev => prev.map(p => p.id === id ? updatedData : p));
         fermerModal();
-        // Optionnel: rafraichir les données si `donneesTemporaires` est mutable ou après un appel API
     };
 
     const handleSupprimerPresence = (id) => {
         if (window.confirm("Êtes-vous sûr de vouloir supprimer cet enregistrement de présence ?")) {
             console.log(`Suppression de la présence ID ${id}`);
-            // Ici, implémenter la logique de suppression
-            fermerModal();
-            // Optionnel: rafraichir les données
+            // Implement logic to delete presence from your data source (API or state)
+            // donnees.setPresences(prev => prev.filter(p => p.id !== id));
+            fermerModal(); // Close modal if open
         }
     };
 
@@ -120,32 +176,40 @@ const GestionPresencesAdmin = () => {
             case 'Présent': return 'bg-acacia-100 text-acacia-800 border border-acacia-200';
             case 'Absent': return 'bg-terre-100 text-terre-800 border border-terre-200';
             case 'Retard': return 'bg-soleil-100 text-soleil-800 border border-soleil-200';
-            case 'Renvoyé': return 'bg-red-100 text-red-800 border border-red-200'; // Utilisation d'une couleur rouge plus distincte
+            case 'Renvoyé': return 'bg-red-100 text-red-800 border border-red-200';
             default: return 'bg-gray-100 text-gray-700 border border-gray-200';
         }
     };
 
     const getStatusIcon = (status) => {
         switch (status) {
-            case 'Présent': return <CheckCircle className="h-4 w-4" />;
+            case 'Présent': return <UserCheck className="h-4 w-4" />;
             case 'Absent': return <UserX className="h-4 w-4" />;
             case 'Retard': return <UserMinus className="h-4 w-4" />;
-            case 'Renvoyé': return <UserPlus className="h-4 w-4" />;
+            case 'Renvoyé': return <AlertCircle className="h-4 w-4" />;
             default: return <Info className="h-4 w-4" />;
         }
     };
 
     const PresenceDetailsModal = ({ presence, onSave, onClose, type }) => {
-        const [formData, setFormData] = useState(presence || {});
+        const [formData, setFormData] = useState({
+            ...presence,
+            date: presence.date ? new Date(presence.date).toISOString().split('T')[0] : ''
+        });
 
         const handleSubmit = (e) => {
             e.preventDefault();
             onSave(formData.id, formData);
         };
 
+        const eleve = eleves.find(e => e.id === formData.eleveId);
+        const classe = classes.find(c => c.id === formData.classeId);
+        const matiere = matieres.find(m => m.id === formData.matiereId);
+        const enseignant = enseignants.find(e => e.id === formData.enseignantId);
+
         return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in">
-                <div className="bg-white rounded-lg max-w-xl w-full p-6 shadow-xl animate-scale-in">
+                <div className="bg-white rounded-lg max-w-xl w-full p-6 shadow-xl animate-scale-in max-h-[90vh] overflow-y-auto">
                     <div className="flex justify-between items-center mb-4 border-b pb-3">
                         <h3 className="text-xl font-semibold text-gray-900">
                             {type === 'voir' ? 'Détails de la présence' : 'Modifier la présence'}
@@ -159,25 +223,25 @@ const GestionPresencesAdmin = () => {
                             <div className="form-group">
                                 <label className="form-label">Élève</label>
                                 <p className="font-semibold text-gray-900">
-                                    {eleves.find(e => e.id === formData.eleveId)?.prenom} {eleves.find(e => e.id === formData.eleveId)?.nom}
+                                    {eleve?.prenom} {eleve?.nom}
                                 </p>
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Classe</label>
                                 <p className="font-semibold text-gray-900">
-                                    {classes.find(c => c.id === formData.classeId)?.nom}
+                                    {classe?.nom}
                                 </p>
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Matière</label>
                                 <p className="font-semibold text-gray-900">
-                                    {matieres.find(m => m.id === formData.matiereId)?.nom}
+                                    {matiere?.nom}
                                 </p>
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Enseignant</label>
                                 <p className="font-semibold text-gray-900">
-                                    {enseignants.find(e => e.id === formData.enseignantId)?.prenom} {enseignants.find(e => e.id === formData.enseignantId)?.nom}
+                                    {enseignant?.prenom} {enseignant?.nom}
                                 </p>
                             </div>
                             <div className="form-group">
@@ -214,7 +278,7 @@ const GestionPresencesAdmin = () => {
                                     <option value="Renvoyé">Renvoyé</option>
                                 </select>
                             </div>
-                            <div className="form-group flex items-center space-x-3">
+                            <div className="form-group flex items-center space-x-3 mt-8">
                                 <input
                                     type="checkbox"
                                     checked={formData.justifie}
@@ -228,7 +292,7 @@ const GestionPresencesAdmin = () => {
                                 <div className="form-group md:col-span-2">
                                     <label className="form-label">Raison</label>
                                     <textarea
-                                        value={formData.raison}
+                                        value={formData.raison || ''}
                                         onChange={(e) => setFormData({ ...formData, raison: e.target.value })}
                                         className="input-field"
                                         rows="2"
@@ -241,7 +305,7 @@ const GestionPresencesAdmin = () => {
                                     <label className="form-label">Heure d'arrivée</label>
                                     <input
                                         type="time"
-                                        value={formData.heureArrivee}
+                                        value={formData.heureArrivee || ''}
                                         onChange={(e) => setFormData({ ...formData, heureArrivee: e.target.value })}
                                         className="input-field"
                                         readOnly={type === 'voir'}
@@ -265,6 +329,129 @@ const GestionPresencesAdmin = () => {
         );
     };
 
+    const FilterModal = ({ onClose, filters, setFilters, applyFilters }) => {
+        const [tempFilters, setTempFilters] = useState(filters);
+
+        const handleApply = () => {
+            setFilters(tempFilters);
+            applyFilters();
+            onClose();
+        };
+
+        const handleClear = () => {
+            setTempFilters({
+                rechercheTexte: '',
+                filtreClasse: '',
+                filtreEnseignant: '',
+                filtreType: '',
+                rechercheTexte: '',
+                filtreJustifie: '',
+                dateDebut: '',
+                dateFin: ''
+            });
+        };
+
+        return (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in">
+                <div className="bg-white rounded-lg w-full max-w-xs sm:max-w-md p-6 shadow-xl animate-scale-in max-h-[90vh] overflow-y-auto">
+                    <div className="flex justify-between items-center mb-4 border-b pb-3">
+                        <h3 className="text-xl font-semibold text-gray-900">Filtrer les présences</h3>
+                        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100">
+                            <X className="h-6 w-6" />
+                        </button>
+                    </div>
+                    <div className="space-y-4">
+                        <div className="relative form-group">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                            <input
+                                type="text"
+                                placeholder="Rechercher élève, matricule..."
+                                value={tempFilters.rechercheTexte}
+                                onChange={(e) => setTempFilters(prev => ({ ...prev, rechercheTexte: e.target.value }))}
+                                className="pl-10 input-field"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <select
+                                value={tempFilters.filtreClasse}
+                                onChange={(e) => setTempFilters(prev => ({ ...prev, filtreClasse: e.target.value }))}
+                                className="input-field"
+                            >
+                                <option value="">Toutes les classes</option>
+                                {classes.map(classe => (
+                                    <option key={classe.id} value={classe.id}>{classe.nom}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <select
+                                value={tempFilters.filtreEnseignant}
+                                onChange={(e) => setTempFilters(prev => ({ ...prev, filtreEnseignant: e.target.value }))}
+                                className="input-field"
+                            >
+                                <option value="">Tous les enseignants</option>
+                                {enseignants.map(ens => (
+                                    <option key={ens.id} value={ens.id}>{ens.prenom} {ens.nom}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <select
+                                value={tempFilters.filtreType}
+                                onChange={(e) => setTempFilters(prev => ({ ...prev, filtreType: e.target.value }))}
+                                className="input-field"
+                            >
+                                <option value="">Tous les types</option>
+                                <option value="Présent">Présent</option>
+                                <option value="Absent">Absent</option>
+                                <option value="Retard">Retard</option>
+                                <option value="Renvoyé">Renvoyé</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <select
+                                value={tempFilters.filtreJustifie}
+                                onChange={(e) => setTempFilters(prev => ({ ...prev, filtreJustifie: e.target.value }))}
+                                className="input-field"
+                            >
+                                <option value="">Justifié / Non justifié</option>
+                                <option value="oui">Justifié</option>
+                                <option value="non">Non justifié</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label sr-only">Date début</label>
+                            <input
+                                type="date"
+                                value={tempFilters.dateDebut}
+                                onChange={(e) => setTempFilters(prev => ({ ...prev, dateDebut: e.target.value }))}
+                                className="input-field"
+                                placeholder="Date début"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label sr-only">Date fin</label>
+                            <input
+                                type="date"
+                                value={tempFilters.dateFin}
+                                onChange={(e) => setTempFilters(prev => ({ ...prev, dateFin: e.target.value }))}
+                                className="input-field"
+                                placeholder="Date fin"
+                            />
+                        </div>
+                        <div className="flex justify-end space-x-2 mt-6 border-t pt-4 border-gray-200">
+                            <button type="button" onClick={handleClear} className="btn-secondary">
+                                Effacer
+                            </button>
+                            <button type="button" onClick={handleApply} className="btn-primary flex items-center">
+                                <Filter className="h-4 w-4 mr-2" /> Appliquer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
 
     return (
         <div className="space-y-6">
@@ -273,60 +460,87 @@ const GestionPresencesAdmin = () => {
                     <h1 className="text-2xl font-bold text-gray-900">Gestion des Présences (Admin)</h1>
                     <p className="text-gray-600">Consultez et gérez tous les enregistrements de présence</p>
                 </div>
-                {/* Pas de bouton d'ajout direct ici, car la création se fait par l'enseignant */}
             </div>
 
-            {/* Statistiques rapides */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                 <div className="card bg-fleuve-50 border border-fleuve-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
-                    <div className="flex items-center">
-                        <Users className="h-8 w-8 text-fleuve-600 mr-3" />
-                        <div>
-                            <p className="text-2xl font-bold text-fleuve-900">{calculerStatistiques.total}</p>
-                            <p className="text-sm text-fleuve-700">Enregistrements total</p>
-                        </div>
-                    </div>
+            {/* Statistiques en carrousel */}
+            <div className="relative overflow-hidden w-full">
+                {/* Mobile: Affiche une seule carte, défilement/navigation. Desktop: Affiche toutes les cartes. */}
+                <div className="hidden lg:grid lg:grid-cols-5 gap-6"> {/* Affiché sur grand écran */}
+                    {statsCards.map((card, index) => {
+                        const Icon = card.icon;
+                        return (
+                            <div key={index} className={`card bg-${card.color}-50 border border-${card.color}-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg`}>
+                                <div className="flex items-center">
+                                    <Icon className={`h-8 w-8 text-${card.color}-600 mr-3`} />
+                                    <div>
+                                        <p className={`text-2xl font-bold text-${card.color}-900`}>{card.value}</p>
+                                        <p className={`text-sm text-${card.color}-700`}>{card.label}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
-                <div className="card bg-acacia-50 border border-acacia-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
-                    <div className="flex items-center">
-                        <UserCheck className="h-8 w-8 text-acacia-600 mr-3" />
-                        <div>
-                            <p className="text-2xl font-bold text-acacia-900">{calculerStatistiques.presents}</p>
-                            <p className="text-sm text-acacia-700">Présences marquées</p>
-                        </div>
+
+                <div className="block lg:hidden"> {/* Affiché sur petit écran */}
+                    <div className="relative flex items-center justify-center">
+                        {/* Bouton Précédent */}
+                        <button
+                            onClick={goToPrevSlide}
+                            className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 z-10 shadow-md"
+                            aria-label="Previous slide"
+                        >
+                            <ArrowLeft className="h-3 w-3" />
+                        </button>
+
+                        {/* La carte visible */}
+                        {statsCards.map((card, index) => {
+                            const Icon = card.icon;
+                            return (
+                                <div
+                                    key={index}
+                                    className={`card bg-${card.color}-50 border border-${card.color}-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg w-11/12 mx-auto`}
+                                    style={{ display: index === currentSlide ? 'block' : 'none' }} // Only show current slide
+                                >
+                                    <div className="flex items-center justify-center"> {/* Centered content */}
+                                        <Icon className={`h-8 w-8 text-${card.color}-600 mr-3`} />
+                                        <div>
+                                            <p className={`text-2xl font-bold text-${card.color}-900`}>{card.value}</p>
+                                            <p className={`text-sm text-${card.color}-700`}>{card.label}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+
+                        {/* Bouton Suivant */}
+                        <button
+                            onClick={goToNextSlide}
+                            className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 z-10 shadow-md"
+                            aria-label="Next slide"
+                        >
+                            <ArrowRight className="h-3 w-3" />
+                        </button>
                     </div>
-                </div>
-                <div className="card bg-terre-50 border border-terre-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
-                    <div className="flex items-center">
-                        <UserX className="h-8 w-8 text-terre-600 mr-3" />
-                        <div>
-                            <p className="text-2xl font-bold text-terre-900">{calculerStatistiques.absents}</p>
-                            <p className="text-sm text-terre-700">Absences ({calculerStatistiques.absentsNonJustifies} non justifiées)</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="card bg-soleil-50 border border-soleil-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
-                    <div className="flex items-center">
-                        <UserMinus className="h-8 w-8 text-soleil-600 mr-3" />
-                        <div>
-                            <p className="text-2xl font-bold text-soleil-900">{calculerStatistiques.retards}</p>
-                            <p className="text-sm text-soleil-700">Retards</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="card bg-red-50 border border-red-200 p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
-                    <div className="flex items-center">
-                        <AlertCircle className="h-8 w-8 text-red-600 mr-3" />
-                        <div>
-                            <p className="text-2xl font-bold text-red-900">{calculerStatistiques.renvoyes}</p>
-                            <p className="text-sm text-red-700">Renvoyés</p>
-                        </div>
+
+                    {/* Indicateurs de pagination (points) */}
+                    <div className="flex justify-center space-x-2 mt-4">
+                        {statsCards.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentSlide(index)}
+                                className={`h-2 w-2 rounded-full ${
+                                    index === currentSlide ? 'bg-fleuve-600' : 'bg-gray-300 hover:bg-gray-400'
+                                } transition-colors duration-200`}
+                                aria-label={`Go to slide ${index + 1}`}
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
 
-            {/* Filtres détaillés */}
-            <div className="card p-6 shadow-sm">
+            {/* Filtres détaillés (Desktop) */}
+            <div className="card p-6 shadow-sm hidden md:block">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Filtrer les enregistrements</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="relative form-group">
@@ -377,7 +591,6 @@ const GestionPresencesAdmin = () => {
                         </select>
                     </div>
                     <div className="form-group">
-                        <label className="form-label">Date début</label>
                         <select
                             value={filtreJustifie}
                             onChange={(e) => setFiltreJustifie(e.target.value)}
@@ -389,21 +602,23 @@ const GestionPresencesAdmin = () => {
                         </select>
                     </div>
                     <div className="form-group">
-                        <label className="form-label">Date début</label>
+                        <label className="form-label sr-only">Date début</label>
                         <input
                             type="date"
                             value={dateDebut}
                             onChange={(e) => setDateDebut(e.target.value)}
                             className="input-field"
+                            placeholder="Date début"
                         />
                     </div>
                     <div className="form-group">
-                        <label className="form-label">Date fin</label>
+                        <label className="form-label sr-only">Date fin</label>
                         <input
                             type="date"
                             value={dateFin}
                             onChange={(e) => setDateFin(e.target.value)}
                             className="input-field"
+                            placeholder="Date fin"
                         />
                     </div>
                     <div className="form-group">
@@ -413,6 +628,17 @@ const GestionPresencesAdmin = () => {
                         </button>
                     </div>
                 </div>
+            </div>
+
+            {/* Filter button for small screens */}
+            <div className="block md:hidden text-center mt-4">
+                <button
+                    onClick={() => setFilterModalOpen(true)}
+                    className="btn-secondary flex items-center justify-center mx-auto shadow-sm hover:shadow-md"
+                >
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filtrer les enregistrements
+                </button>
             </div>
 
             {/* Tableau des enregistrements de présence */}
@@ -513,13 +739,31 @@ const GestionPresencesAdmin = () => {
                 </table>
             </div>
 
-            {/* Modal de détails/modification */}
+            {/* Modal de détails/modification de présence */}
             {modalOuvert && presenceSelectionnee && (
                 <PresenceDetailsModal
                     presence={presenceSelectionnee}
                     onSave={handleModifierPresence}
                     onClose={fermerModal}
                     type={typeModal}
+                />
+            )}
+
+            {/* Filter Modal for small screens */}
+            {filterModalOpen && (
+                <FilterModal
+                    onClose={() => setFilterModalOpen(false)}
+                    filters={{ rechercheTexte, filtreClasse, filtreEnseignant, filtreType, filtreJustifie, dateDebut, dateFin }}
+                    setFilters={({ rechercheTexte, filtreClasse, filtreEnseignant, filtreType, filtreJustifie, dateDebut, dateFin }) => {
+                        setRechercheTexte(rechercheTexte);
+                        setFiltreClasse(filtreClasse);
+                        setFiltreEnseignant(filtreEnseignant);
+                        setFiltreType(filtreType);
+                        setFiltreJustifie(filtreJustifie);
+                        setDateDebut(dateDebut);
+                        setDateFin(dateFin);
+                    }}
+                    applyFilters={() => { /* Filters are applied by state changes */ }}
                 />
             )}
         </div>

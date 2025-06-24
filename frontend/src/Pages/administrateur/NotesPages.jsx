@@ -1,383 +1,398 @@
-
 import {
-  BarChart3,
-  BookOpen,
   Download,
-  Eye,
-  FileText
+  Edit,
+  FileText,
+  Plus, // <-- AJOUTÉ: Pour le bouton Supprimer
+  Save,
+  School, // <-- AJOUTÉ: Pour le bouton Modifier
+  Trash2,
+  X
 } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useAuth } from '../../context/MonContext';
 
 const NotesBulletinsPage = () => {
-  const { donnees } = useAuth();
-  const [filtreClasse, setFiltreClasse] = useState('');
+  const { donnees } = useAuth(); // Supposons que donnees contient aussi des fonctions setNotes, setEleves, etc.
+  const [classeSelectionneeId, setClasseSelectionneeId] = useState(null);
   const [filtreMatiere, setFiltreMatiere] = useState('');
   const [filtreTrimestre, setFiltreTrimestre] = useState('1');
-  const [vueActive, setVueActive] = useState('notes'); // 'notes', 'bulletins', 'statistiques'
+
+  const [noteSelectionnee, setNoteSelectionnee] = useState(null); // <-- NOUVEL ÉTAT pour la note à modifier
+  const [modalNoteOuvert, setModalNoteOuvert] = useState(false); // <-- NOUVEL ÉTAT pour le modal de note
 
   const notes = donnees.notes || [];
   const eleves = donnees.eleves || [];
   const classes = donnees.classes || [];
   const matieres = donnees.matieres || [];
 
-  const notesFiltrees = notes.filter(note => {
-    const eleve = eleves.find(e => e.id === note.eleveId);
-    const matiere = matieres.find(m => m.id === note.matiereId);
-    
-    return (!filtreClasse || eleve?.classe === filtreClasse) &&
-           (!filtreMatiere || matiere?.nom === filtreMatiere) &&
-           (!filtreTrimestre || note.trimestre.toString() === filtreTrimestre);
-  });
+  // Filtrer les notes pour la classe sélectionnée et les autres filtres
+  const notesFiltrees = useMemo(() => {
+    if (!classeSelectionneeId) return [];
 
-  const calculerMoyenne = (eleveId, trimestre) => {
-    const notesEleve = notes.filter(n => n.eleveId === eleveId && n.trimestre === trimestre);
-    if (notesEleve.length === 0) return 0;
-    
-    const total = notesEleve.reduce((sum, note) => sum + (note.valeur * note.coefficient), 0);
-    const totalCoeff = notesEleve.reduce((sum, note) => sum + note.coefficient, 0);
-    
-    return totalCoeff > 0 ? (total / totalCoeff).toFixed(2) : 0;
+    const nomClasseSelectionnee = classes.find(c => c.id === classeSelectionneeId)?.nom;
+
+    return notes.filter(note => {
+      const eleve = eleves.find(e => e.id === note.eleveId);
+      const matiere = matieres.find(m => m.id === note.matiereId);
+
+      const correspondClasse = eleve?.classe === nomClasseSelectionnee;
+      const correspondMatiere = !filtreMatiere || matiere?.nom === filtreMatiere;
+      const correspondTrimestre = !filtreTrimestre || note.trimestre.toString() === filtreTrimestre;
+
+      return correspondClasse && correspondMatiere && correspondTrimestre;
+    });
+  }, [notes, eleves, classes, matieres, classeSelectionneeId, filtreMatiere, filtreTrimestre]);
+
+  // --- Fonctions de gestion de la note (Ajout, Modification, Suppression) ---
+
+  const ouvrirModalNote = (note = null) => {
+    setNoteSelectionnee(note); // Si null, c'est pour un ajout
+    setModalNoteOuvert(true);
   };
 
-  const obtenirStatistiquesClasse = (classe) => {
-    const elevesClasse = eleves.filter(e => e.classe === classe);
-    const moyennes = elevesClasse.map(eleve => parseFloat(calculerMoyenne(eleve.id, parseInt(filtreTrimestre))));
+  const fermerModalNote = () => {
+    setNoteSelectionnee(null);
+    setModalNoteOuvert(false);
+  };
+
+  const ajouterOuModifierNote = (nouvelleNote) => {
     
-    return {
-      effectif: elevesClasse.length,
-      moyenneClasse: moyennes.length > 0 ? (moyennes.reduce((a, b) => a + b, 0) / moyennes.length).toFixed(2) : 0,
-      meilleureMoyenne: moyennes.length > 0 ? Math.max(...moyennes).toFixed(2) : 0,
-      moyenneLaPlusFaible: moyennes.length > 0 ? Math.min(...moyennes).toFixed(2) : 0
+    fermerModalNote();
+  };
+
+
+
+  // --- Composant FormulaireNote (Modal) ---
+  const FormulaireNote = () => {
+    const initialFormData = noteSelectionnee ? {
+      ...noteSelectionnee,
+      eleveId: noteSelectionnee.eleveId,
+      matiereId: noteSelectionnee.matiereId,
+      valeur: noteSelectionnee.valeur,
+      type: noteSelectionnee.type,
+      date: noteSelectionnee.date,
+      coefficient: noteSelectionnee.coefficient,
+      trimestre: noteSelectionnee.trimestre
+    } : {
+      eleveId: '', // L'ID de l'élève
+      matiereId: '', // L'ID de la matière
+      valeur: '',
+      type: '',
+      date: '',
+      coefficient: 1, // Valeur par défaut
+      trimestre: parseInt(filtreTrimestre) || 1 // Pré-rempli avec le trimestre actuel
     };
-  };
 
-  const VueNotes = () => (
-    <div className="card p-0 shadow-sm"> {/* Ajout de p-0 et shadow-sm */}
-      <div className="table-container">
-        <table className="table">
-          <thead className="table-header">
-            <tr>
-              <th className="table-header-cell">
-                Élève
-              </th>
-              <th className="table-header-cell">
-                Classe
-              </th>
-              <th className="table-header-cell">
-                Matière
-              </th>
-              <th className="table-header-cell">
-                Note
-              </th>
-              <th className="table-header-cell">
-                Type
-              </th>
-              <th className="table-header-cell">
-                Date
-              </th>
-            </tr>
-          </thead>
-          <tbody className="table-body">
-            {notesFiltrees.map((note) => {
-              const eleve = eleves.find(e => e.id === note.eleveId);
-              const matiere = matieres.find(m => m.id === note.matiereId);
-              
-              return (
-                <tr key={note.id} className="table-row">
-                  <td className="table-cell">
-                    <div className="text-sm font-medium text-gray-900">
-                      {eleve?.prenom} {eleve?.nom}
-                    </div>
-                  </td>
-                  <td className="table-cell">
-                    {eleve?.classe}
-                  </td>
-                  <td className="table-cell">
-                    {matiere?.nom}
-                  </td>
-                  <td className="table-cell">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${
-                      note.valeur >= 16 ? 'bg-acacia-100 text-acacia-800 border-acacia-200' :
-                      note.valeur >= 14 ? 'bg-fleuve-100 text-fleuve-800 border-fleuve-200' :
-                      note.valeur >= 10 ? 'bg-soleil-100 text-soleil-800 border-soleil-200' :
-                      'bg-terre-100 text-terre-800 border-terre-200'
-                    }`}>
-                      {note.valeur}/20
-                    </span>
-                  </td>
-                  <td className="table-cell">
-                    {note.type}
-                  </td>
-                  <td className="table-cell">
-                    {new Date(note.date).toLocaleDateString('fr-FR')}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      {notesFiltrees.length === 0 && (
-        <div className="text-center py-12">
-          <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">Aucune note trouvée pour ces filtres.</p>
-          <p className="text-gray-400 text-sm mt-2">Veuillez ajuster les filtres ou ajouter des notes.</p>
-        </div>
-      )}
-    </div>
-  );
+    const [formData, setFormData] = useState(initialFormData);
 
-  const VueBulletins = () => (
-    <div className="space-y-6">
-      {classes.filter(classe => !filtreClasse || classe.nom === filtreClasse).map(classe => {
-        const elevesClasse = eleves.filter(e => e.classe === classe.nom);
-        
-        return (
-          <div key={classe.id} className="card p-6 shadow-md border border-gray-100"> {/* Amélioration de la card */}
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">{classe.nom}</h3>
-              <button className="btn-secondary flex items-center shadow-sm hover:shadow-md">
-                <Download className="h-4 w-4 mr-2" />
-                Exporter bulletins
-              </button>
-            </div>
-            
-            <div className="table-container">
-              <table className="table">
-                <thead className="table-header">
-                  <tr>
-                    <th className="table-header-cell">
-                      Élève
-                    </th>
-                    <th className="table-header-cell">
-                      Moyenne générale
-                    </th>
-                    <th className="table-header-cell">
-                      Rang
-                    </th>
-                    <th className="table-header-cell">
-                      Mention
-                    </th>
-                    <th className="table-header-cell text-right">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="table-body">
-                  {elevesClasse.map((eleve, index) => {
-                    const moyenne = parseFloat(calculerMoyenne(eleve.id, parseInt(filtreTrimestre)));
-                    const mention = moyenne >= 16 ? 'Très Bien' :
-                                   moyenne >= 14 ? 'Bien' :
-                                   moyenne >= 12 ? 'Assez Bien' :
-                                   moyenne >= 10 ? 'Passable' : 'Insuffisant';
-                    
-                    return (
-                      <tr key={eleve.id} className="table-row">
-                        <td className="table-cell">
-                          <div className="flex items-center">
-                            <img
-                              src={eleve.photo || 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&dpr=1'}
-                              alt={`${eleve.prenom} ${eleve.nom}`}
-                              className="h-8 w-8 rounded-full object-cover shadow-sm"
-                            />
-                            <div className="ml-3">
-                              <div className="text-sm font-medium text-gray-900">
-                                {eleve.prenom} {eleve.nom}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="table-cell">
-                          <span className={`text-sm font-medium ${
-                            moyenne >= 10 ? 'text-acacia-600' : 'text-terre-600'
-                          }`}>
-                            {moyenne}/20
-                          </span>
-                        </td>
-                        <td className="table-cell">
-                          {index + 1}
-                        </td>
-                        <td className="table-cell">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${
-                            moyenne >= 16 ? 'bg-acacia-100 text-acacia-800 border-acacia-200' :
-                            moyenne >= 14 ? 'bg-fleuve-100 text-fleuve-800 border-fleuve-200' :
-                            moyenne >= 12 ? 'bg-soleil-100 text-soleil-800 border-soleil-200' :
-                            moyenne >= 10 ? 'bg-gray-100 text-gray-800 border-gray-200' : // Pas de couleur spécifique, utilisation de gris
-                            'bg-terre-100 text-terre-800 border-terre-200'
-                          }`}>
-                            {mention}
-                          </span>
-                        </td>
-                        <td className="table-cell text-right font-medium">
-                          <button className="p-2 rounded-full text-fleuve-600 hover:bg-fleuve-50 hover:text-fleuve-800 transition-colors duration-200 flex items-center justify-end">
-                            <Eye className="h-4 w-4 mr-1" />
-                            Voir bulletin
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-             {elevesClasse.length === 0 && (
-                <div className="text-center py-8">
-                    <p className="text-gray-500">Aucun élève dans cette classe ou pour ce trimestre.</p>
-                </div>
-            )}
-          </div>
-        );
-      })}
-       {classes.filter(classe => !filtreClasse || classe.nom === filtreClasse).length === 0 && (
-        <div className="text-center py-12">
-            <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">Aucun bulletin à afficher pour la classe ou les filtres sélectionnés.</p>
-        </div>
-      )}
-    </div>
-  );
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      ajouterOuModifierNote(formData);
+    };
 
-  const VueStatistiques = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {classes.filter(classe => !filtreClasse || classe.nom === filtreClasse).map(classe => {
-          const stats = obtenirStatistiquesClasse(classe.nom);
-          
-          return (
-            <div key={classe.id} className="card p-6 shadow-md border border-gray-100"> {/* Amélioration de la card */}
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">{classe.nom}</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Effectif:</span>
-                  <span className="text-base font-medium text-gray-900">{stats.effectif}</span>
-                </div>
-                <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Moyenne classe:</span>
-                  <span className="text-base font-medium text-fleuve-600">{stats.moyenneClasse}/20</span> {/* Couleur fleuve */}
-                </div>
-                <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Meilleure moyenne:</span>
-                  <span className="text-base font-medium text-acacia-600">{stats.meilleureMoyenne}/20</span> {/* Couleur acacia */}
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Plus faible moyenne:</span>
-                  <span className="text-base font-medium text-terre-600">{stats.moyenneLaPlusFaible}/20</span> {/* Couleur terre */}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-       {classes.filter(classe => !filtreClasse || classe.nom === filtreClasse).length === 0 && (
-        <div className="text-center py-12">
-            <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">Aucune statistique à afficher pour la classe ou les filtres sélectionnés.</p>
-        </div>
-      )}
-    </div>
-  );
+    // Filtrer les élèves par la classe sélectionnée pour le sélecteur
+    const elevesDeLaClasseSelectionnee = eleves.filter(e =>
+      e.classe === classes.find(c => c.id === classeSelectionneeId)?.nom
+    );
 
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Notes & Bulletins</h1>
-          <p className="text-gray-600">Consultez les notes et générez les bulletins</p>
-        </div>
-        <div className="flex space-x-3">
-          <button className="btn-secondary flex items-center shadow-sm hover:shadow-md">
-            <Download className="h-4 w-4 mr-2" />
-            Exporter
-          </button>
-        </div>
-      </div>
-
-      {/* Onglets */}
-      <div className="card p-1 shadow-sm"> {/* Ajout de p-1 et shadow-sm */}
-        <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-          <button
-            onClick={() => setVueActive('notes')}
-            className={`flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
-              vueActive === 'notes'
-                ? 'bg-white text-fleuve-600 shadow-sm' 
-                : 'text-gray-500 hover:bg-gray-200 hover:text-gray-700'
-            }`}
-          >
-            <FileText className="h-4 w-4 mr-2" />
-            Notes
-          </button>
-          <button
-            onClick={() => setVueActive('bulletins')}
-            className={`flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
-              vueActive === 'bulletins'
-                ? 'bg-white text-fleuve-600 shadow-sm'
-                : 'text-gray-500 hover:bg-gray-200 hover:text-gray-700'
-            }`}
-          >
-            <BookOpen className="h-4 w-4 mr-2" />
-            Bulletins
-          </button>
-          <button
-            onClick={() => setVueActive('statistiques')}
-            className={`flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
-              vueActive === 'statistiques'
-                ? 'bg-white text-fleuve-600 shadow-sm'
-                : 'text-gray-500 hover:bg-gray-200 hover:text-gray-700'
-            }`}
-          >
-            <BarChart3 className="h-4 w-4 mr-2" />
-            Statistiques
-          </button>
-        </div>
-      </div>
-
-      {/* Filtres */}
-      <div className="card p-6 shadow-sm"> {/* Amélioration de la card */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+    return (
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="form-group">
+            <label className="form-label">Élève *</label>
             <select
-              value={filtreClasse}
-              onChange={(e) => setFiltreClasse(e.target.value)}
+              value={formData.eleveId}
+              onChange={(e) => setFormData({ ...formData, eleveId: parseInt(e.target.value) })}
               className="input-field"
+              required
+              disabled={!!noteSelectionnee} // Désactivé si on modifie une note existante
             >
-              <option value="">Toutes les classes</option>
-              {classes.map(classe => (
-                <option key={classe.id} value={classe.nom}>{classe.nom}</option>
+              <option value="">Sélectionner un élève</option>
+              {elevesDeLaClasseSelectionnee.map(eleve => (
+                <option key={eleve.id} value={eleve.id}>{eleve.prenom} {eleve.nom}</option>
               ))}
             </select>
           </div>
           <div className="form-group">
+            <label className="form-label">Matière *</label>
             <select
-              value={filtreMatiere}
-              onChange={(e) => setFiltreMatiere(e.target.value)}
+              value={formData.matiereId}
+              onChange={(e) => setFormData({ ...formData, matiereId: parseInt(e.target.value) })}
               className="input-field"
+              required
+              disabled={!!noteSelectionnee} // Désactivé si on modifie une note existante
             >
-              <option value="">Toutes les matières</option>
+              <option value="">Sélectionner une matière</option>
               {matieres.map(matiere => (
-                <option key={matiere.id} value={matiere.nom}>{matiere.nom}</option>
+                <option key={matiere.id} value={matiere.id}>{matiere.nom}</option>
               ))}
             </select>
           </div>
           <div className="form-group">
-            <select
-              value={filtreTrimestre}
-              onChange={(e) => setFiltreTrimestre(e.target.value)}
+            <label className="form-label">Note (sur 20) *</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              max="20"
+              value={formData.valeur}
+              onChange={(e) => setFormData({ ...formData, valeur: parseFloat(e.target.value) })}
               className="input-field"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Type de note *</label>
+            <input
+              type="text"
+              value={formData.type}
+              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              className="input-field"
+              placeholder="Ex: Devoir, Examen, Projet"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Coefficient *</label>
+            <input
+              type="number"
+              min="1"
+              value={formData.coefficient}
+              onChange={(e) => setFormData({ ...formData, coefficient: parseInt(e.target.value) })}
+              className="input-field"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Trimestre *</label>
+            <select
+              value={formData.trimestre}
+              onChange={(e) => setFormData({ ...formData, trimestre: parseInt(e.target.value) })}
+              className="input-field"
+              required
             >
               <option value="1">1er Trimestre</option>
               <option value="2">2ème Trimestre</option>
               <option value="3">3ème Trimestre</option>
             </select>
           </div>
-          <div></div> 
+          <div className="form-group">
+            <label className="form-label">Date de la note *</label>
+            <input
+              type="date"
+              value={formData.date}
+              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              className="input-field"
+              required
+            />
+          </div>
+        </div>
+        <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 mt-6">
+          <button type="button" onClick={fermerModalNote} className="btn-secondary shadow-sm hover:shadow-md">
+            Annuler
+          </button>
+          <button type="submit" className="btn-primary flex items-center shadow-md hover:shadow-lg">
+            <Save className="h-4 w-4 mr-2" />
+            {noteSelectionnee ? 'Modifier la note' : 'Ajouter la note'}
+          </button>
+        </div>
+      </form>
+    );
+  };
+
+  // --- Composant de vue des Notes (mise à jour pour inclure les actions) ---
+  const VueNotes = () => (
+    <div className="card p-0 shadow-sm">
+      <div className="table-container">
+        <table className="table">
+          <thead className="table-header">
+            <tr>
+              <th className="table-header-cell">Élève</th>
+              <th className="table-header-cell">Matière</th>
+              <th className="table-header-cell">Note</th>
+              <th className="table-header-cell">Type</th>
+              <th className="table-header-cell">Date</th>
+              <th className="table-header-cell text-right">Actions</th> {/* Nouvelle colonne Actions */}
+            </tr>
+          </thead>
+          <tbody className="table-body">
+            {notesFiltrees.length > 0 ? (
+              notesFiltrees.map((note) => {
+                const eleve = eleves.find(e => e.id === note.eleveId);
+                const matiere = matieres.find(m => m.id === note.matiereId);
+
+                return (
+                  <tr key={note.id} className="table-row">
+                    <td className="table-cell">
+                      <div className="text-sm font-medium text-gray-900">
+                        {eleve?.prenom} {eleve?.nom}
+                      </div>
+                    </td>
+                    <td className="table-cell">{matiere?.nom}</td>
+                    <td className="table-cell">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${
+                        note.valeur >= 16 ? 'bg-acacia-100 text-acacia-800 border-acacia-200' :
+                        note.valeur >= 14 ? 'bg-fleuve-100 text-fleuve-800 border-fleuve-200' :
+                        note.valeur >= 10 ? 'bg-soleil-100 text-soleil-800 border-soleil-200' :
+                        'bg-terre-100 text-terre-800 border-terre-200'
+                      }`}>
+                        {note.valeur}/20
+                      </span>
+                    </td>
+                    <td className="table-cell">{note.type}</td>
+                    <td className="table-cell">{new Date(note.date).toLocaleDateString('fr-FR')}</td>
+                    <td className="table-cell text-right font-medium">
+                      <div className="flex items-center justify-end space-x-2">
+                        <button
+                          onClick={() => ouvrirModalNote(note)} // <-- Ouvre le modal pour modifier
+                          className="p-2 rounded-full text-soleil-600 hover:bg-soleil-50 hover:text-soleil-800 transition-colors duration-200"
+                          title="Modifier la note"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          
+                          className="p-2 rounded-full text-terre-600 hover:bg-terre-50 hover:text-terre-800 transition-colors duration-200"
+                          title="Supprimer la note"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+                <tr className="text-center">
+                    <td colSpan="6" className="py-12 text-gray-500">
+                        <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500">Aucune note trouvée pour cette sélection.</p>
+                        <p className="text-gray-400 text-sm mt-2">Veuillez ajuster les filtres ou ajouter des notes.</p>
+                    </td>
+                </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+
+  // --- Rendu principal du composant ---
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Gestion des Notes</h1>
+          <p className="text-gray-600">Consultez les notes des élèves</p>
+        </div>
+        <div className="flex space-x-3">
+          <button className="btn-secondary flex items-center shadow-sm hover:shadow-md">
+            <Download className="h-4 w-4 mr-2" />
+            Exporter
+          </button>
+          <button
+            onClick={() => ouvrirModalNote()} // <-- Bouton pour ajouter une nouvelle note
+            className="btn-primary flex items-center shadow-md hover:shadow-lg"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Ajouter une note
+          </button>
         </div>
       </div>
 
-      {/* Contenu selon la vue active */}
-      {vueActive === 'notes' && <VueNotes />}
-      {vueActive === 'bulletins' && <VueBulletins />}
-      {vueActive === 'statistiques' && <VueStatistiques />}
+      {!classeSelectionneeId ? (
+        <div className="card p-6 shadow-lg text-center max-w-md mx-auto my-10">
+          <School className="h-16 w-16 text-fleuve-500 mx-auto mb-6" />
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Sélectionnez une classe pour commencer</h2>
+          <p className="text-gray-600 mb-6">
+            Veuillez choisir une classe pour afficher les notes.
+          </p>
+          <select
+            value={classeSelectionneeId || ''}
+            onChange={(e) => setClasseSelectionneeId(parseInt(e.target.value))}
+            className="input-field w-full md:w-3/4 mx-auto block"
+          >
+            <option value="" disabled>-- Choisir une classe --</option>
+            {classes.map(classe => (
+              <option key={classe.id} value={classe.id}>{classe.nom}</option>
+            ))}
+          </select>
+          {classes.length === 0 && (
+            <p className="text-sm text-gray-500 mt-4">Aucune classe disponible. Veuillez en ajouter une.</p>
+          )}
+        </div>
+      ) : (
+        <>
+          {/* Filtres */}
+          <div className="card p-6 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="form-group">
+                <label className="form-label sr-only">Matière</label>
+                <select
+                  value={filtreMatiere}
+                  onChange={(e) => setFiltreMatiere(e.target.value)}
+                  className="input-field"
+                >
+                  <option value="">Toutes les matières</option>
+                  {matieres.map(matiere => (
+                    <option key={matiere.id} value={matiere.nom}>{matiere.nom}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label sr-only">Trimestre</label>
+                <select
+                  value={filtreTrimestre}
+                  onChange={(e) => setFiltreTrimestre(e.target.value)}
+                  className="input-field"
+                >
+                  <option value="1">1er Trimestre</option>
+                  <option value="2">2ème Trimestre</option>
+                  <option value="3">3ème Trimestre</option>
+                </select>
+              </div>
+              <div className="form-group flex items-center bg-gray-50 rounded-md px-3 py-2 border border-gray-200">
+                <School className="h-5 w-5 text-fleuve-600 mr-2" />
+                <span className="text-gray-700 font-medium">
+                  Classe: <span className="text-gray-900 font-semibold">{classes.find(c => c.id === classeSelectionneeId)?.nom}</span>
+                </span>
+                <button
+                  onClick={() => setClasseSelectionneeId(null)}
+                  className="ml-auto p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-200"
+                  title="Changer de classe"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <VueNotes />
+        </>
+      )}
+
+      {/* Modal d'ajout/modification de note */}
+      {modalNoteOuvert && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-white rounded-lg max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-xl animate-scale-in">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {noteSelectionnee ? 'Modifier la note' : 'Ajouter une nouvelle note'}
+                </h3>
+                <button
+                  onClick={fermerModalNote}
+                  className="text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                  title="Fermer"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+              <FormulaireNote />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

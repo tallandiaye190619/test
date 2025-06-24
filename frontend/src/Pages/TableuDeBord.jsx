@@ -6,8 +6,6 @@ import {
   ,
 
 
-
-
   BookOpen,
   Calendar,
   CheckCircle,
@@ -42,8 +40,8 @@ const TableauDeBord = () => {
             titre: 'Total Élèves',
             valeur: donnees.eleves?.length || 0, // Utilisation directe de donnees.eleves
             icone: Users,
-            couleurBg: 'bg-fleuve-500',
-            couleurText: 'text-fleuve-900',
+            couleurBg: 'bg-fleuve-500', // Couleurs plus vives pour l'administrateur
+            couleurText: 'text-white', // Texte blanc pour contraste
             couleurIcon: 'text-white',
             tendance: '+5%'
           },
@@ -52,7 +50,7 @@ const TableauDeBord = () => {
             valeur: donnees.enseignants?.length || 0, // Utilisation directe de donnees.enseignants
             icone: GraduationCap,
             couleurBg: 'bg-acacia-500',
-            couleurText: 'text-acacia-900',
+            couleurText: 'text-white',
             couleurIcon: 'text-white',
             tendance: '+2%'
           },
@@ -61,7 +59,7 @@ const TableauDeBord = () => {
             valeur: donnees.classes?.length || 0, // Utilisation directe de donnees.classes
             icone: BookOpen,
             couleurBg: 'bg-soleil-500',
-            couleurText: 'text-soleil-900',
+            couleurText: 'text-white',
             couleurIcon: 'text-white',
             tendance: '0%'
           },
@@ -70,7 +68,7 @@ const TableauDeBord = () => {
             valeur: (donnees.paiements?.filter(p => p.statut === 'payé').reduce((sum, p) => sum + p.montant, 0) || 0).toLocaleString(), // Calcul direct
             icone: DollarSign,
             couleurBg: 'bg-terre-500',
-            couleurText: 'text-terre-900',
+            couleurText: 'text-white',
             couleurIcon: 'text-white',
             tendance: '+12%'
           }
@@ -114,7 +112,7 @@ const TableauDeBord = () => {
           }
         ];
       case 'eleve':
-        const classeEleve = donnees.classes.filter(c => c.id === utilisateur?.classId) || N/A
+        const classeEleve = donnees.classes.filter(c => c.id === utilisateur?.classId) || 'N/A'; // Correction: 'N/A' si classeId n'est pas trouvé
         const notesEleve = donnees.notes?.filter(n => n.eleveId === utilisateur?.id).length || 0;
         const documentsEleve = donnees.documents?.filter(d => d.classe === utilisateur?.classe).length || 0;
         const notificationsNonLuesEleve = donnees.notifications?.filter(n => !n.lue && n.destinataires.includes('eleve')).length || 0;
@@ -153,7 +151,7 @@ const TableauDeBord = () => {
           }
         ];
       case 'parent':
-        const enfantsP = utilisateur.enfants || [];
+        const enfantsP = utilisateur.enfants || []; // Correctement extrait de l'objet utilisateur
         const paiementsPayesParents = donnees.paiements?.filter(p => p.statut === 'payé' && enfantsP.some(e => e.id === p.eleveId)).length || 0;
         const paiementsEnAttenteParents = donnees.paiements?.filter(p => p.statut === 'en_attente' && enfantsP.some(e => e.id === p.eleveId)).length || 0;
         const notificationsNonLuesParent = donnees.notifications?.filter(n => !n.lue && n.destinataires.includes('parent')).length || 0;
@@ -237,26 +235,28 @@ const TableauDeBord = () => {
   const obtenirActivitesRecentes = () => {
     const activites = [];
     
+    // Ajoutez des activités spécifiques pour l'administrateur
     if (utilisateur?.role === 'administrateur') {
       activites.push(
-        { titre: 'Nouveau paiement reçu', temps: 'Il y a 2h', type: 'paiement' },
-        { titre: 'Note ajoutée par M. Ndiaye', temps: 'Il y a 4h', type: 'note' },
-        { titre: 'Nouvel élève inscrit', temps: 'Il y a 1 jour', type: 'eleve' }
+        { titre: 'Nouveau paiement reçu', temps: 'Il y a 2h', type: 'paiement', color: 'bg-acacia-500' },
+        { titre: 'Note ajoutée par M. Ndiaye', temps: 'Il y a 4h', type: 'note', color: 'bg-fleuve-500' },
+        { titre: 'Nouvel élève inscrit', temps: 'Il y a 1 jour', type: 'eleve', color: 'bg-soleil-500' },
+        { titre: 'Absence non justifiée de Ibrahima Sarr', temps: 'Il y a 1 jour', type: 'absence', color: 'bg-terre-500' } // Exemple
       );
     } else if (utilisateur?.role === 'enseignant') {
       activites.push(
-        { titre: 'Note ajoutée pour Ibrahima', temps: 'Il y a 1h', type: 'note' },
-        { titre: 'Document uploadé', temps: 'Il y a 3h', type: 'document' }
+        { titre: 'Note ajoutée pour Ibrahima', temps: 'Il y a 1h', type: 'note', color: 'bg-fleuve-500' },
+        { titre: 'Document uploadé', temps: 'Il y a 3h', type: 'document', color: 'bg-soleil-500' }
       );
     } else if (utilisateur?.role === 'eleve') {
       activites.push(
-        { titre: 'Nouvelle note en Mathématiques', temps: 'Il y a 2h', type: 'note' },
-        { titre: 'Document ajouté en Français', temps: 'Il y a 1 jour', type: 'document' }
+        { titre: 'Nouvelle note en Mathématiques', temps: 'Il y a 2h', type: 'note', color: 'bg-fleuve-500' },
+        { titre: 'Document ajouté en Français', temps: 'Il y a 1 jour', type: 'document', color: 'bg-soleil-500' }
       );
     } else if (utilisateur?.role === 'parent') {
         activites.push(
-            { titre: `Paiement reçu pour ${donnees.enfants?.[0]?.prenom || 'un enfant'}`, temps: 'Il y a 5h', type: 'paiement' },
-            { titre: `Nouvelle note pour ${donnees.enfants?.[0]?.prenom || 'un enfant'} en Français`, temps: 'Il y a 1 jour', type: 'note' }
+            { titre: `Paiement reçu pour ${donnees.enfants?.[0]?.prenom || 'un enfant'}`, temps: 'Il y a 5h', type: 'paiement', color: 'bg-acacia-500' },
+            { titre: `Nouvelle note pour ${donnees.enfants?.[0]?.prenom || 'un enfant'} en Français`, temps: 'Il y a 1 jour', type: 'note', color: 'bg-fleuve-500' }
         );
     }
     
@@ -313,7 +313,7 @@ const TableauDeBord = () => {
                   <p className="text-2xl font-bold text-white">{stat.valeur}</p> {/* Texte blanc */}
                   {stat.tendance && (
                     <p className={`text-sm mt-1 flex items-center ${
-                      stat.tendance.startsWith('+') ? 'text-acacia-100' : 'text-terre-100' // Tendances en blanc sur fond coloré
+                      stat.tendance.startsWith('+') ? 'text-acacia-100' : 'text-red-100' // Tendances en blanc sur fond coloré (red-100 pour la baisse)
                     }`}>
                       {stat.tendance.startsWith('+') ? <TrendingUp className="h-4 w-4 mr-1" /> : <TrendingDown className="h-4 w-4 mr-1" />}
                       {stat.tendance}
@@ -334,14 +334,14 @@ const TableauDeBord = () => {
         <>
             <Icon 
                 onClick={() => scrollContainer('left')} 
-                className="absolute left-0 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-md text-gray-600 hover:bg-gray-100 p-2 z-10 hidden sm:block" // Caché sur mobile très petit, visible à partir de sm
+                className="absolute left-0 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-md text-gray-600 hover:bg-gray-100 p-2 z-10 hidden sm:block cursor-pointer" // Ajout de cursor-pointer
                 aria-label="Previous slide"
             >
                 <ArrowLeftCircle size={24} />
             </Icon>
             <Icon 
                 onClick={() => scrollContainer('right')} 
-                className="absolute right-0 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-md text-gray-600 hover:bg-gray-100 p-2 z-10 hidden sm:block" // Caché sur mobile très petit, visible à partir de sm
+                className="absolute right-0 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-md text-gray-600 hover:bg-gray-100 p-2 z-10 hidden sm:block cursor-pointer" // Ajout de cursor-pointer
                 aria-label="Next slide"
             >
                 <ArrowRightCircle size={24} />
@@ -359,12 +359,8 @@ const TableauDeBord = () => {
       <div className="space-y-3">
         {activitesRecentes.length > 0 ? (
           activitesRecentes.map((a, i) => (
-            <div key={i} className="flex items-center space-x-3 p-3 bg-fleuve-50 rounded-md border border-fleuve-200 shadow-sm">
-              <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
-                a.type === 'paiement' ? 'bg-acacia-500' :
-                a.type === 'note' ? 'bg-fleuve-500' :
-                a.type === 'document' ? 'bg-soleil-500' : 'bg-gray-500'
-              }`} />
+            <div key={i} className="flex items-center space-x-3 p-3 bg-fleuve-50 rounded-md border border-fleuve-200 shadow-sm transition-transform duration-200 hover:scale-[1.01]"> {/* Ajout d'effet hover */}
+              <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${a.color}`} /> {/* Utilise la couleur définie dans l'activité */}
               <div className="flex-1">
                 <p className="text-sm font-semibold text-gray-900">{a.titre}</p>
                 <p className="text-xs text-gray-500">{a.temps}</p>
@@ -381,21 +377,21 @@ const TableauDeBord = () => {
     <div className="card p-5 shadow-sm">
       <h3 className="text-lg font-bold text-fleuve-700 mb-4">Prochains événements</h3>
       <div className="space-y-3">
-        <div className="flex items-center space-x-3 p-3 bg-acacia-50 rounded-md border border-acacia-200 shadow-sm">
+        <div className="flex items-center space-x-3 p-3 bg-acacia-50 rounded-md border border-acacia-200 shadow-sm transition-transform duration-200 hover:scale-[1.01]">
           <Calendar className="h-5 w-5 text-acacia-600 flex-shrink-0" />
           <div>
             <p className="text-sm font-semibold text-gray-900">Réunion des parents</p>
             <p className="text-xs text-gray-500">25 janvier 2024 à 15h00</p>
           </div>
         </div>
-        <div className="flex items-center space-x-3 p-3 bg-soleil-50 rounded-md border border-soleil-200 shadow-sm">
+        <div className="flex items-center space-x-3 p-3 bg-soleil-50 rounded-md border border-soleil-200 shadow-sm transition-transform duration-200 hover:scale-[1.01]">
           <BookOpen className="h-5 w-5 text-soleil-600 flex-shrink-0" />
           <div>
             <p className="text-sm font-semibold text-gray-900">Compositions 1er trimestre</p>
             <p className="text-xs text-gray-500">30 janvier 2024</p>
           </div>
         </div>
-         <div className="flex items-center space-x-3 p-3 bg-fleuve-50 rounded-md border border-fleuve-200 shadow-sm">
+         <div className="flex items-center space-x-3 p-3 bg-fleuve-50 rounded-md border border-fleuve-200 shadow-sm transition-transform duration-200 hover:scale-[1.01]">
           <Calendar className="h-5 w-5 text-fleuve-600 flex-shrink-0" />
           <div>
             <p className="text-sm font-semibold text-gray-900">Sortie scolaire</p>
@@ -408,9 +404,9 @@ const TableauDeBord = () => {
 
   {/* Notifications importantes */}
   {donnees.notifications && donnees.notifications.filter(n => !n.lue && n.priorite === 'urgente').length > 0 && (
-    <div className="card border border-terre-200 bg-terre-50 p-5 shadow-md">
+    <div className="card border border-terre-200 bg-terre-50 p-5 shadow-md transition-transform duration-200 hover:scale-[1.005]"> {/* Ajout d'effet hover */}
       <h3 className="text-lg font-bold text-terre-700 flex items-center mb-4">
-        <AlertCircle className="h-5 w-5 mr-2" />
+        <AlertCircle className="h-5 w-5 mr-2 animate-pulse" /> {/* Ajout d'animation */}
         Notifications urgentes non lues
       </h3>
       <div className="space-y-2">
